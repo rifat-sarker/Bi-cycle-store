@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 import { BicycleServices } from './bicycle.service';
 
-
-
 // create a bicycle
 const createBicycle = async (req: Request, res: Response) => {
   try {
@@ -23,7 +21,6 @@ const createBicycle = async (req: Request, res: Response) => {
   }
 };
 
-
 //get all bicycle
 const getAllBicycle = async (req: Request, res: Response) => {
   try {
@@ -41,7 +38,27 @@ const getAllBicycle = async (req: Request, res: Response) => {
   }
 };
 
+// get a single bicycle
+const getASpecificBicycle = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const result = await BicycleServices.getASpecificBicycleFromDB(productId);
+    res.status(200).json({
+      message: 'Get a specific bicycle successfully',
+      status: true,
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong!!',
+      error: error,
+    });
+  }
+};
+
 export const BicycleController = {
   createBicycle,
   getAllBicycle,
+  getASpecificBicycle,
 };

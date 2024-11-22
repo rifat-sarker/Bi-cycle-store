@@ -1,5 +1,5 @@
-import { Schema } from "mongoose";
-import { TOrder } from "./order.interface";
+import { Schema } from 'mongoose';
+import { TOrder } from './order.interface';
 
 const oderSchema = new Schema<TOrder>({
   email: {

@@ -7,4 +7,3 @@ export type TBicycle = {
   quantity: number;
   inStock: boolean;
 };
-
