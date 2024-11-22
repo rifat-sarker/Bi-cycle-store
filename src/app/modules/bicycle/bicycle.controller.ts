@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import { BicycleServices } from './bicycle.service';
+import bicycleZodSchema from './bicycle.validation';
 
 // create a bicycle
 const createBicycle = async (req: Request, res: Response) => {
   try {
     const bicycleData = req.body; // name alias
-    const result = await BicycleServices.createBicycleIntoDB(bicycleData);
+    const zodParsedData = bicycleZodSchema.parse(bicycleData);
+    const result = await BicycleServices.createBicycleIntoDB(zodParsedData);
 
-    // console.log(result);
     res.status(200).json({
       message: 'Bicycle created successfully',
       success: true,
@@ -15,8 +16,12 @@ const createBicycle = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     res.status(500).json({
-      message: error.message || 'Something went wrong',
+      message: 'Validation failed',
       success: false,
+      error: {
+        ...error,
+        stack: `Error: Something went wrong! ${error.stack}`,
+      },
     });
   }
 };
@@ -24,7 +29,16 @@ const createBicycle = async (req: Request, res: Response) => {
 //get all bicycle
 const getAllBicycle = async (req: Request, res: Response) => {
   try {
-    const result = await BicycleServices.getAllBicycleFromDB();
+    const searchTerm = req.query.searchTerm as string | undefined;
+    const result = await BicycleServices.getAllBicycleFromDB(searchTerm);
+
+    if (!result.length) {
+      return res.status(404).json({
+        message: 'No bicycles found matching your search criteria.',
+        success: false,
+        data: [],
+      });
+    }
     res.status(200).json({
       message: 'Bicycles retrieved successfully',
       status: true,

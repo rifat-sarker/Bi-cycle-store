@@ -6,10 +6,12 @@ const bicycleSchema = new Schema<TBicycle>(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
     brand: {
       type: String,
       required: true,
+      trim: true,
     },
     price: {
       type: Number,
