@@ -71,8 +71,33 @@ const getASpecificBicycle = async (req: Request, res: Response) => {
   }
 };
 
+// put
+const updateBicycle = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const body = req.body;
+    const updateBodyParsed = bicycleZodSchema.parse(body);
+    const result = await BicycleServices.updateBicycleIntoDB(
+      id,
+      updateBodyParsed,
+    );
+    res.send({
+      success: true,
+      message: 'Bicycle updated successfully',
+      result,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: 'Something went wrong',
+      error,
+    });
+  }
+};
+
 export const BicycleController = {
   createBicycle,
   getAllBicycle,
   getASpecificBicycle,
+  updateBicycle,
 };

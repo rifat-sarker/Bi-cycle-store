@@ -26,8 +26,14 @@ const getASpecificBicycleFromDB = async (_id: string) => {
   return result;
 };
 
+const updateBicycleIntoDB = async (id: string, payload: Partial<TBicycle>) => {
+  const result = await Bicycle.findByIdAndUpdate(id, payload);
+  return result;
+};
+
 export const BicycleServices = {
   createBicycleIntoDB,
   getAllBicycleFromDB,
   getASpecificBicycleFromDB,
+  updateBicycleIntoDB,
 };

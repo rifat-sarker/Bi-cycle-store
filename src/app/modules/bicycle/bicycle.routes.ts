@@ -11,4 +11,6 @@ router.get('/', BicycleController.getAllBicycle);
 // get a single bicycle route
 router.get('/:productId', BicycleController.getASpecificBicycle);
 
+router.put('/:id', BicycleController.updateBicycle);
+
 export const BicycleRoutes = router;
