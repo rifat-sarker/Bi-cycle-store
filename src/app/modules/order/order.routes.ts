@@ -5,4 +5,6 @@ const router = express.Router();
 
 router.post('/create-order', OrderController.createOrder);
 
+router.get('/revenue', OrderController.calculateRevenue)
+
 export const OrderRoutes = router;

@@ -29,7 +29,7 @@ const createBicycle = async (req: Request, res: Response) => {
 //get all bicycle
 const getAllBicycle = async (req: Request, res: Response) => {
   try {
-    const searchTerm = req.query.searchTerm as string ;
+    const searchTerm = req.query.searchTerm as string;
     const result = await BicycleServices.getAllBicycleFromDB(searchTerm);
 
     if (!result.length) {

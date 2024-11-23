@@ -6,6 +6,27 @@ const createOrderIntoDB = async (orderData: TOrder) => {
   return result;
 };
 
+const calculateRevenueFromDB = async () => {
+  const result = await Order.aggregate([
+    {
+      $addFields: {
+        totalRevenue: {
+          $multiply: ['$totalPrice', '$quantity'],
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalRevenue: { $sum: '$totalRevenue' },
+      },
+    },
+  ]);
+
+  return result[0]?.totalRevenue || 0;
+};
+
 export const OrderServices = {
   createOrderIntoDB,
+  calculateRevenueFromDB,
 };
