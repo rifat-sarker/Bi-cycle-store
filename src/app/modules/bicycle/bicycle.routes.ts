@@ -7,10 +7,9 @@ router.post('/create-bicycle', BicycleController.createBicycle);
 
 // get all
 router.get('/', BicycleController.getAllBicycle);
-
 // get a single bicycle route
 router.get('/:productId', BicycleController.getASpecificBicycle);
-
-router.put('/:id', BicycleController.updateBicycle);
+router.put('/:productId', BicycleController.updateBicycle);
+router.delete('/:productId', BicycleController.deleteBicycle);
 
 export const BicycleRoutes = router;

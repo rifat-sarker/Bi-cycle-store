@@ -63,9 +63,9 @@ const getASpecificBicycle = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
-      message: 'Something went wrong!!',
+      message: 'Bicycle not found',
       error: error,
     });
   }
@@ -74,17 +74,17 @@ const getASpecificBicycle = async (req: Request, res: Response) => {
 // put
 const updateBicycle = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
+    const { productId } = req.params;
     const body = req.body;
     const updateBodyParsed = bicycleZodSchema.parse(body);
     const result = await BicycleServices.updateBicycleIntoDB(
-      id,
+      productId,
       updateBodyParsed,
     );
     res.send({
       success: true,
       message: 'Bicycle updated successfully',
-      result,
+      data: result,
     });
   } catch (error) {
     res.send({
@@ -95,9 +95,30 @@ const updateBicycle = async (req: Request, res: Response) => {
   }
 };
 
+// detele bi cycle
+const deleteBicycle = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const result = await BicycleServices.deleteBicycleFromDB(productId);
+
+    res.send({
+      message: 'Bicycle deleted successfully',
+      status: true,
+      data: {},
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong!!',
+      error: error,
+    });
+  }
+};
+
 export const BicycleController = {
   createBicycle,
   getAllBicycle,
   getASpecificBicycle,
   updateBicycle,
+  deleteBicycle,
 };
