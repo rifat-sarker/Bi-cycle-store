@@ -37,7 +37,7 @@ const bicycleSchema = new Schema<TBicycle>(
       required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 // create Bicycle model

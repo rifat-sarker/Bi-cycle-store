@@ -1,5 +1,6 @@
 import express from 'express';
 import { BicycleController } from './bicycle.controller';
+
 const router = express.Router();
 
 // call bicycle controller func

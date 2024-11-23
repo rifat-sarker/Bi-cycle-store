@@ -6,7 +6,7 @@ const createBicycleIntoDB = async (bicycleData: TBicycle) => {
   return result;
 };
 
-const getAllBicycleFromDB = async (searchTerm: string | undefined) => {
+const getAllBicycleFromDB = async (searchTerm: string ) => {
   const query = searchTerm
     ? {
         $or: [

@@ -8,8 +8,8 @@ const orderSchema = new Schema<TOrder>(
       required: true,
     },
     product: {
-      type: Object,
-      requred: true,
+      type: String,
+      required: true,
     },
     quantity: {
       type: Number,
@@ -20,7 +20,7 @@ const orderSchema = new Schema<TOrder>(
       required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 //create order model
