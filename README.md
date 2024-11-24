@@ -1,23 +1,37 @@
-# 🚴Bicycle Order Management System
+# 🚴Bicycle Order Management Backend
 
-A full-stack application designed to manage orders and inventory for bicycles. The system allows users to create orders, update bicycle stock automatically, and calculate total revenue efficiently using MongoDB aggregation pipelines
+A backend application built with Node.js, Express, TypeScript, and MongoDB to manage bicycles and orders. The system provides CRUD operations for bicycles and supports creating orders and calculating total revenue using MongoDB aggregation pipelines.
 
 ## 🌟 Features
-- Order Creation:
+## Bicycle Management:
+-- Create a new bicycle with all necessary details.
+-- Update existing bicycle details, including stock and specifications.
+-- Retrieve bicycle data
+-- Delete a bicycle entry from the database.
+
+## Order Creation:
  - Validates order data using Zod.
  - Checks product availability and stock before order creation.
  - Automatically updates bicycle stock after order placement.
 
-- Revenue Calculation:
+## Revenue Calculation:
  - Aggregates total revenue from all orders using MongoDB pipelines.
  - Provides a clean API response with the total revenue.
 
 - Validation & Error Handling:
- - Ensures robust data validation and handles common errors gracefully.
+ - Ensures robust data validation using Zod schemas.
+ - Handles common errors gracefully to provide a reliable API experience.
  
-- RESTful API Endpoints:
-/api/orders/create-order for order creation.
-/api/orders/revenue for revenue calculation.
+## RESTful API Endpoints:
+- /api/products/create – Create a new bicycle.
+- /api/products/:productId – Update bicycle details.
+- /api/products – Fetch all bicycles.
+- /api/products/:productId – Delete a bicycle.
+  
+## Order Endpoints
+- /api/orders/create-order – Place a new order.
+- /api/orders/revenue – Get total revenue from all orders.
+
 
 ## 🚀 Getting Started
 Follow these instructions to set up the project locally.
