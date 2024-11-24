@@ -4,10 +4,10 @@ A backend application built with Node.js, Express, TypeScript, and MongoDB to ma
 
 ## 🌟 Features
 ## Bicycle Management:
--- Create a new bicycle with all necessary details.
--- Update existing bicycle details, including stock and specifications.
--- Retrieve bicycle data
--- Delete a bicycle entry from the database.
+ - Create a new bicycle with all necessary details.
+ - Update existing bicycle details, including stock and specifications.
+ - Retrieve bicycle data
+ - Delete a bicycle entry from the database.
 
 ## Order Creation:
  - Validates order data using Zod.
@@ -23,7 +23,7 @@ A backend application built with Node.js, Express, TypeScript, and MongoDB to ma
  - Handles common errors gracefully to provide a reliable API experience.
  
 ## RESTful API Endpoints:
-- /api/products/create – Create a new bicycle.
+- /api/products/create-bicycle – Create a new bicycle.
 - /api/products/:productId – Update bicycle details.
 - /api/products – Fetch all bicycles.
 - /api/products/:productId – Delete a bicycle.
