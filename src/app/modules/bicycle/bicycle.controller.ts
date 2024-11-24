@@ -27,17 +27,18 @@ const createBicycle = async (req: Request, res: Response) => {
 };
 
 //get all bicycle
-const getAllBicycle = async (req: Request, res: Response) => {
+const getAllBicycle = async (req: Request, res: Response): Promise<void> => {
   try {
     const searchTerm = req.query.searchTerm as string;
     const result = await BicycleServices.getAllBicycleFromDB(searchTerm);
 
     if (!result.length) {
-      return res.status(404).json({
+      res.status(404).json({
         message: 'No bicycles found matching your search criteria.',
         success: false,
         data: [],
       });
+      return;
     }
     res.status(200).json({
       message: 'Bicycles retrieved successfully',
@@ -45,8 +46,8 @@ const getAllBicycle = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
-      message: error.message || 'Something went wrong',
+    res.status(404).json({
+      message: error.message || 'Bicycle not found',
       success: false,
     });
   }
@@ -99,7 +100,7 @@ const updateBicycle = async (req: Request, res: Response) => {
 const deleteBicycle = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const result = await BicycleServices.deleteBicycleFromDB(productId);
+    await BicycleServices.deleteBicycleFromDB(productId);
 
     res.send({
       message: 'Bicycle deleted successfully',

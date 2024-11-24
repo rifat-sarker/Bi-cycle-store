@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+
 import { OrderServices } from './order.service';
 import orderSchema from './order.validation';
 import { BicycleServices } from '../bicycle/bicycle.service';
+import { Request, Response } from 'express';
 
-const createOrder = async (req: Request, res: Response) => {
+const createOrder  = async (req: Request, res: Response): Promise<void> => {
   try {
     const orderData = req.body;
     const { product, quantity } = orderData;
@@ -12,17 +13,19 @@ const createOrder = async (req: Request, res: Response) => {
     const bicycle = await BicycleServices.getASpecificBicycleFromDB(product);
 
     if (!bicycle) {
-      return res.status(404).json({
+     res.status(404).json({
         message: 'Bicycle not found',
         status: false,
       });
+      return 
     }
 
     if (bicycle.quantity < quantity) {
-      return res.status(400).json({
+      res.status(400).json({
         message: 'Insufficient stock available',
         status: false,
       });
+      return 
     }
 
     await BicycleServices.updateBicycleIntoDB(product, {
