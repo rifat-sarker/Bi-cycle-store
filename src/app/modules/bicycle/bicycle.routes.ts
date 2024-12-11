@@ -4,7 +4,7 @@ import { BicycleController } from './bicycle.controller';
 const router = express.Router();
 
 // call bicycle controller func
-router.post('/create-bicycle', BicycleController.createBicycle);
+router.post('/', BicycleController.createBicycle);
 
 // get all
 router.get('/', BicycleController.getAllBicycle);
