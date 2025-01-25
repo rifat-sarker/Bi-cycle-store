@@ -19,7 +19,7 @@ const changePassword = catchAsync(async (req, res) => {
     { email },
     { oldPassword, newPassword },
   );
-  console.log(result);
+  
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
