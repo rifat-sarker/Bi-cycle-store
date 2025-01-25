@@ -1,12 +1,14 @@
 import app from './app';
 import mongoose from 'mongoose';
 import config from './app/config';
+import { Server } from 'http';
+let server: Server;
 
 async function main() {
   try {
-    await mongoose.connect(config.database_uri as string);
-    app.listen(config.port, () => {
-      console.log(`bi cycle store in running on port ${config.port}`);
+    await mongoose.connect(config.database_url as string);
+    server = app.listen(config.port, () => {
+      console.log(`Example app listening on port ${config.port}`);
     });
   } catch (error) {
     console.log(error);
@@ -14,3 +16,20 @@ async function main() {
 }
 
 main();
+
+// asynchronous
+process.on('unhandledRejection', () => {
+  console.log(`😡unhandledRejection is detected, shutting down ...`);
+  if (server) {
+    server.close(() => {
+      process.exit(1);
+    });
+  }
+  process.exit(1);
+});
+
+// synchronous
+process.on('uncaughtException', () => {
+  console.log(`uncaughtException is detected, shutting down ...`);
+  process.exit(1);
+});
