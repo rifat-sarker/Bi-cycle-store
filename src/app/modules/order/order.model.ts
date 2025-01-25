@@ -19,6 +19,11 @@ const orderSchema = new Schema<TOrder>(
       type: Number,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ['Pending', 'Shipped', 'Delivered'],
+      default: 'Pending',
+    },
   },
   { timestamps: true, versionKey: false },
 );

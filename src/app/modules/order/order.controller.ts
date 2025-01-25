@@ -32,7 +32,7 @@ const createOrder = async (req: Request, res: Response): Promise<void> => {
 
     await BicycleServices.updateBicycleIntoDB(product, {
       quantity: bicycle.quantity - quantity,
-      inStock: bicycle.quantity - quantity > 0, // if bicycle quantity is 0 it will set inStock false
+      stock: bicycle.quantity - quantity > 0, // if bicycle quantity is 0 it will set inStock false
     });
 
     const result = await OrderServices.createOrderIntoDB(zodParsedOrderData);

@@ -17,7 +17,7 @@ const bicycleSchema = new Schema<TBicycle>(
       type: Number,
       required: true,
     },
-    type: {
+    model: {
       type: String,
       enum: {
         values: ['Mountain', 'Road', 'Hybrid', 'BMX', 'Electric'],
@@ -28,11 +28,11 @@ const bicycleSchema = new Schema<TBicycle>(
       type: String,
       required: true,
     },
-    quantity: {
-      type: Number,
-      required: true,
-    },
-    inStock: {
+    // quantity: {
+    //   type: Number,
+    //   required: true,
+    // },
+    stock: {
       type: Boolean,
       required: true,
     },
