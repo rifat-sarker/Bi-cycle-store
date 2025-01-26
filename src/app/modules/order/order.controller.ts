@@ -1,58 +1,94 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { OrderServices } from './order.service';
-import orderSchema from './order.validation';
 import { BicycleServices } from '../bicycle/bicycle.service';
 import { Request, Response } from 'express';
+import catchAsync from '../../utils/catchAsync';
+import httpStatus from 'http-status';
+import sendResponse from '../../utils/sendResponse';
 
-const createOrder = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const orderData = req.body;
-    const { product, quantity } = orderData;
-    const zodParsedOrderData = orderSchema.parse(orderData);
+const createOrder = catchAsync(async (req, res) => {
+  const orderData = req.body;
+  const { product, quantity } = orderData;
 
-    const bicycle = await BicycleServices.getASpecificBicycleFromDB(product);
+  const bicycle = await BicycleServices.getASpecificBicycleFromDB(product);
 
-    if (!bicycle) {
-      res.status(404).json({
-        message: 'Bicycle not found',
-        status: false,
-      });
-      return;
-    }
-
-    if (bicycle.quantity === undefined || bicycle.quantity < quantity) {
-      res.status(400).json({
-        message:
-          bicycle.quantity === undefined
-            ? 'Bicycle quantity is undefined'
-            : 'Insufficient stock available',
-        status: false,
-      });
-      return;
-    }
-
-    await BicycleServices.updateBicycleIntoDB(product, {
-      quantity: bicycle.quantity - quantity,
-      stock: bicycle.quantity - quantity > 0, // if bicycle quantity is 0 it will set inStock false
+  if (!bicycle) {
+    res.status(404).json({
+      message: 'Bicycle not found',
+      status: false,
     });
-
-    const result = await OrderServices.createOrderIntoDB(zodParsedOrderData);
-
-    res.status(200).json({
-      message: 'Order created successfully',
-      status: true,
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      message: 'Validation failed',
-      success: false,
-      error: {
-        ...error,
-        stack: `Error: Something went wrong! ${error.stack}`,
-      },
-    });
+    return;
   }
-};
+
+  if (bicycle.quantity === undefined || bicycle.quantity < quantity) {
+    res.status(400).json({
+      message:
+        bicycle.quantity === undefined
+          ? 'Bicycle quantity is undefined'
+          : 'Insufficient stock available',
+      status: false,
+    });
+    return;
+  }
+
+  await BicycleServices.updateBicycleIntoDB(product, {
+    quantity: bicycle.quantity - quantity,
+    stock: bicycle.quantity - quantity > 0,
+  });
+
+  const result = await OrderServices.createOrderIntoDB(orderData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Order created successfully',
+    data: result,
+  });
+});
+
+const getAllOrders = catchAsync(async (req, res) => {
+  const result = await OrderServices.getAllOrdersFromDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'All order  is retrieved successfully',
+    data: result,
+  });
+});
+
+const getSingleOrder = catchAsync(async (req, res) => {
+  const { orderId } = req.params;
+  const result = await OrderServices.getSingleOrderFromDB(orderId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Single Order  is retrieved successfully',
+    data: result,
+  });
+});
+
+const updateOrder = catchAsync(async (req, res) => {
+  const { orderId } = req.params;
+  const result = await OrderServices.updateOrderIntoDB(orderId, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Order is updated successfully',
+    data: result,
+  });
+});
+
+const deleteOrder = catchAsync(async (req, res) => {
+  const { orderId } = req.params;
+  const result = await OrderServices.deleteOrderFromDB(orderId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Order is deleted successfully',
+    data: result,
+  });
+});
 
 const calculateRevenue = async (req: Request, res: Response) => {
   try {
@@ -74,7 +110,12 @@ const calculateRevenue = async (req: Request, res: Response) => {
     });
   }
 };
+
 export const OrderController = {
   createOrder,
+  getAllOrders,
+  getSingleOrder,
+  updateOrder,
+  deleteOrder,
   calculateRevenue,
 };

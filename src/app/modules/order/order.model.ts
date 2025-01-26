@@ -11,6 +11,10 @@ const orderSchema = new Schema<TOrder>(
       type: String,
       required: true,
     },
+    details: {
+      type: String,
+      ref: "Bicycle"
+    },
     quantity: {
       type: Number,
       required: true,
