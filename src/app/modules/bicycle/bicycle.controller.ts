@@ -1,14 +1,11 @@
 import { Request, Response } from 'express';
 import { BicycleServices } from './bicycle.service';
-import bicycleZodSchema from './bicycle.validation';
-import bicycleUpdateZodSchema from './bicycle.validation';
 
 // create a bicycle
 const createBicycle = async (req: Request, res: Response) => {
   try {
     const bicycleData = req.body; // name alias
-    const zodParsedData = bicycleZodSchema.parse(bicycleData);
-    const result = await BicycleServices.createBicycleIntoDB(zodParsedData);
+    const result = await BicycleServices.createBicycleIntoDB(bicycleData);
 
     res.status(200).json({
       message: 'Bicycle created successfully',
@@ -77,11 +74,9 @@ const getASpecificBicycle = async (req: Request, res: Response) => {
 const updateBicycle = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const body = req.body;
-    const updateBodyParsed = bicycleUpdateZodSchema.parse(body);
     const result = await BicycleServices.updateBicycleIntoDB(
       productId,
-      updateBodyParsed,
+      req.body,
     );
     res.send({
       success: true,

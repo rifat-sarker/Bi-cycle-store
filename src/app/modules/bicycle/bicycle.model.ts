@@ -28,10 +28,10 @@ const bicycleSchema = new Schema<TBicycle>(
       type: String,
       required: true,
     },
-    // quantity: {
-    //   type: Number,
-    //   required: true,
-    // },
+    quantity: {
+      type: Number,
+      required: true,
+    },
     stock: {
       type: Boolean,
       required: true,

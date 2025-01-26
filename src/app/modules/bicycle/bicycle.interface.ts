@@ -4,6 +4,6 @@ export type TBicycle = {
   price?: number;
   model?: 'Mountain' | 'Road' | 'Hybrid' | 'BMX' | 'Electric';
   description?: string;
-  // quantity?: number;
+  quantity?: number;
   stock?: boolean;
 };
