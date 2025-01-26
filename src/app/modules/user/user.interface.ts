@@ -11,8 +11,8 @@ export interface TUser {
   needsPasswordChange: boolean;
   passwordChangedAt?: Date;
   role: 'admin' | 'customer';
-  // status: 'in-progress' | 'blocked';
-  // isDeleted: boolean;
+  status: 'in-progress' | 'blocked';
+  isDeleted: boolean;
 }
 
 export interface UserModel extends Model<TUser> {

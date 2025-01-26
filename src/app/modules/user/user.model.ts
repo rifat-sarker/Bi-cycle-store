@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import { TUser, UserModel } from './user.interface';
 import config from '../../config';
+import { UserStatus } from './user.constant';
 
 const userSchema = new Schema<TUser, UserModel>(
   {
@@ -37,11 +38,15 @@ const userSchema = new Schema<TUser, UserModel>(
       enum: ['admin', 'customer'],
       default: 'customer',
     },
-    // status: {
-    //   type: String,
-    //   enum: UserStatus,
-    //   default: 'in-progress',
-    // },
+    status: {
+      type: String,
+      enum: UserStatus,
+      default: 'in-progress',
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
