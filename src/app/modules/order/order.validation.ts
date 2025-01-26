@@ -2,16 +2,16 @@ import { z } from 'zod';
 
 const createOrderSchema = z.object({
   body: z.object({
-    email: z.string().email({ message: 'Invalid email address' }),
+    email: z.string().email({ message: 'Invalid email address' }).optional(),
     product: z.string().nonempty({ message: 'Product ID is required' }),
     details: z.string().nonempty('Details is required').optional(),
     quantity: z
       .number()
       .int()
       .positive({ message: 'Quantity must be a positive integer' }),
-    totalPrice: z
-      .number()
-      .positive({ message: 'Total price must be a positive number' }),
+    // totalPrice: z
+    //   .number()
+    //   .positive({ message: 'Total price must be a positive number' }),
   }),
 });
 

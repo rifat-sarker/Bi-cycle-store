@@ -7,7 +7,10 @@ const createOrderIntoDB = async (orderData: TOrder) => {
 };
 
 const getAllOrdersFromDB = async () => {
-  const result = await Order.find();
+  const result = await Order.find().populate(
+    'details',
+    'name description price',
+  );
   return result;
 };
 

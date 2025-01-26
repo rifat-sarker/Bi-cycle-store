@@ -1,8 +1,15 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 import { TOrder } from './order.interface';
 
 const orderSchema = new Schema<TOrder>(
   {
+    
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User', // Reference to the User model
+      required: true,
+    },
+
     email: {
       type: String,
       required: true,
@@ -12,8 +19,8 @@ const orderSchema = new Schema<TOrder>(
       required: true,
     },
     details: {
-      type: String,
-      ref: "Bicycle"
+      type: Schema.Types.ObjectId,
+      ref: 'Bicycle',
     },
     quantity: {
       type: Number,

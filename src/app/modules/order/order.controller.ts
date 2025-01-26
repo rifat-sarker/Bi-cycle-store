@@ -5,11 +5,23 @@ import { Request, Response } from 'express';
 import catchAsync from '../../utils/catchAsync';
 import httpStatus from 'http-status';
 import sendResponse from '../../utils/sendResponse';
+import { User } from '../user/user.model';
 
 const createOrder = catchAsync(async (req, res) => {
   const orderData = req.body;
+  const userEmail = req.user?.email;
+
+  if (!userEmail) {
+    res.status(401).json({
+      message: 'User email not found in token',
+      status: false,
+    });
+    return;
+  }
+
   const { product, quantity } = orderData;
 
+  // Get product (bicycle) details
   const bicycle = await BicycleServices.getASpecificBicycleFromDB(product);
 
   if (!bicycle) {
@@ -31,12 +43,33 @@ const createOrder = catchAsync(async (req, res) => {
     return;
   }
 
+  // Update the bicycle stock
   await BicycleServices.updateBicycleIntoDB(product, {
     quantity: bicycle.quantity - quantity,
     stock: bicycle.quantity - quantity > 0,
   });
 
-  const result = await OrderServices.createOrderIntoDB(orderData);
+  const user = await User.findOne({ email: userEmail });
+  if (!user) {
+    res.status(404).json({
+      message: 'User not found',
+      status: false,
+    });
+    return;
+  }
+
+  const orderDetails = {
+    ...orderData,
+    user: user._id,
+    email: user.email,
+    product: bicycle.name,
+    details: bicycle._id,
+    quantity,
+    totalPrice: bicycle.price! * quantity,
+  };
+
+  // Create the order
+  const result = await OrderServices.createOrderIntoDB(orderDetails);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

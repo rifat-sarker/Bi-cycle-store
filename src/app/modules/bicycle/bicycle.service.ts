@@ -12,7 +12,7 @@ const getAllBicycleFromDB = async (searchTerm: string) => {
         $or: [
           { name: { $regex: searchTerm, $options: 'i' } },
           { brand: { $regex: searchTerm, $options: 'i' } },
-          { type: { $regex: searchTerm, $options: 'i' } },
+          { model: { $regex: searchTerm, $options: 'i' } },
         ],
       }
     : {};
