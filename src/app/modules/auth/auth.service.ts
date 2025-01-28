@@ -43,22 +43,15 @@ const loginUser = async (payload: TLoginUser) => {
     config.jwt_access_expires_in as string,
   );
 
-  const refreshToken = createToken(
-    jwtPayload,
-    config.jwt_refresh_secret as string,
-    config.jwt_refresh_expires_in as string,
-  );
 
   return {
     accessToken,
-    refreshToken,
     needsPasswordChange: user?.needsPasswordChange,
   };
 };
 
-
 const changePassword = async (
-  userData: {email:string},
+  userData: { email: string },
   payload: { oldPassword: string; newPassword: string },
 ) => {
   const user = await User.isUserExistsByEmail(userData.email);
@@ -86,6 +79,7 @@ const changePassword = async (
   );
   return null;
 };
+
 
 export const AuthServices = {
   loginUser,

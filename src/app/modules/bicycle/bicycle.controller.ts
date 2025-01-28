@@ -1,4 +1,3 @@
-
 import { BicycleServices } from './bicycle.service';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
@@ -21,8 +20,7 @@ const createBicycle = catchAsync(async (req, res) => {
 
 //get all bicycle
 const getAllBicycle = catchAsync(async (req, res) => {
-  const searchTerm = req.query.searchTerm as string;
-  const result = await BicycleServices.getAllBicycleFromDB(searchTerm);
+  const result = await BicycleServices.getAllBicycleFromDB(req.query);
 
   if (!result.length) {
     res.status(404).json({

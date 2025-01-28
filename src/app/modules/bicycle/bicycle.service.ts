@@ -1,3 +1,5 @@
+import QueryBuilder from '../../builder/QueryBuilder';
+import { bicycleSearchableFields } from './bicycle.constant';
 import { TBicycle } from './bicycle.interface';
 import { Bicycle } from './bicycle.model';
 
@@ -6,18 +8,15 @@ const createBicycleIntoDB = async (bicycleData: TBicycle) => {
   return result;
 };
 
-const getAllBicycleFromDB = async (searchTerm: string) => {
-  const query = searchTerm
-    ? {
-        $or: [
-          { name: { $regex: searchTerm, $options: 'i' } },
-          { brand: { $regex: searchTerm, $options: 'i' } },
-          { model: { $regex: searchTerm, $options: 'i' } },
-        ],
-      }
-    : {};
+const getAllBicycleFromDB = async (query: Record<string, unknown>) => {
+  const bicycleQuery = new QueryBuilder(Bicycle.find(), query)
+    .search(bicycleSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-  const result = await Bicycle.find(query);
+  const result = await bicycleQuery.modelQuery;
   return result;
 };
 
