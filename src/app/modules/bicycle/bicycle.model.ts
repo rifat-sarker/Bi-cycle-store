@@ -8,14 +8,13 @@ const bicycleSchema = new Schema<TBicycle>(
       required: true,
       trim: true,
     },
+    productImg : {
+      type: String,
+    },
     brand: {
       type: String,
       required: true,
       trim: true,
-    },
-    price: {
-      type: Number,
-      required: true,
     },
     model: {
       type: String,
@@ -24,8 +23,28 @@ const bicycleSchema = new Schema<TBicycle>(
         message: '{VALUE} is not supported',
       },
     },
+    category: {
+      type: String,
+      enum: {
+        values: [
+          'Outdoor',
+          'Sport',
+          'Urban',
+          'Adventure',
+          'Electric',
+          'Kids',
+          'Racing',
+          'Fitness',
+        ],
+        message: '{VALUE} is not supported',
+      },
+    },
     description: {
       type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
       required: true,
     },
     quantity: {
