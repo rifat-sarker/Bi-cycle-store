@@ -4,7 +4,24 @@ const createBicycleValidationSchema = z.object({
   body: z.object({
     name: z.string().nonempty('Name is required'),
     productImg: z.string().nonempty('ProductImg is required').optional(),
-    brand: z.string().nonempty('Brand is required'),
+    brand: z.enum(
+      [
+        'CityRide',
+        'UrbanMotion',
+        'TrailPro',
+        'KidBike',
+        'GreenWheel',
+        'Velocita',
+        'HealthBike',
+        'SpeedBikes',
+        'ElectraBike',
+      ],
+      {
+        errorMap: () => ({
+          message: 'Invalid brand name. Please select a valid brand.',
+        }),
+      },
+    ),
     price: z.number().min(0, 'Price must be a positive number'),
     model: z.enum(['Mountain', 'Road', 'Hybrid', 'BMX', 'Electric'], {
       errorMap: () => ({ message: 'Model is not supported' }),

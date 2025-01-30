@@ -11,7 +11,7 @@ router.post(
   AuthControllers.loginUser,
 );
 
-router.post(
+router.patch(
   '/change-password',
   AuthControllers.changePassword,
 );

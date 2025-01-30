@@ -8,13 +8,25 @@ const bicycleSchema = new Schema<TBicycle>(
       required: true,
       trim: true,
     },
-    productImg : {
+    productImg: {
       type: String,
     },
     brand: {
       type: String,
-      required: true,
-      trim: true,
+      enum: {
+        values: [
+          'CityRide',
+          'UrbanMotion',
+          'TrailPro',
+          'KidBike',
+          'GreenWheel',
+          'Velocita',
+          'HealthBike',
+          'SpeedBikes',
+          'ElectraBike',
+        ],
+        message: '{VALUE} is not supported',
+      },
     },
     model: {
       type: String,
