@@ -8,7 +8,7 @@ import { Bicycle } from './bicycle.model';
 const createBicycleIntoDB = async (file: any, bicycleData: TBicycle) => {
   try {
     if (file) {
-      const imageName = 'productimage';
+      const imageName = bicycleData.name || 'bicycle';
       const path = file?.path;
 
       const { secure_url } = await sendImageToCloudinary(path, imageName);
