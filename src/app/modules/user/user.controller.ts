@@ -17,7 +17,7 @@ const createUser = catchAsync(async (req, res) => {
 
 const createAdmin = catchAsync(async (req, res) => {
   const { name, email, password } = req.body;
-  
+
   const result = await UserServices.createAdminIntoDB({
     name,
     email,
@@ -33,7 +33,18 @@ const createAdmin = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req, res) => {
+  const result = await UserServices.getAllUsersFromDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User retrieved succesfully',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createUser,
   createAdmin,
+  getAllUsers,
 };

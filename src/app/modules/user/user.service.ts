@@ -34,7 +34,7 @@ const createUserIntoDB = async (userData: TUser) => {
 
   return {
     ...newUser.toObject(),
-    accessToken
+    accessToken,
   };
 };
 
@@ -43,7 +43,13 @@ const createAdminIntoDB = async (userData: TAdmin) => {
   return result;
 };
 
+const getAllUsersFromDB = async () => {
+  const result = await User.find();
+  return result;
+};
+
 export const UserServices = {
   createUserIntoDB,
   createAdminIntoDB,
+  getAllUsersFromDB,
 };
