@@ -3,7 +3,7 @@ import { z } from 'zod';
 const createBicycleValidationSchema = z.object({
   body: z.object({
     name: z.string().nonempty('Name is required'),
-    productImg: z.string().nonempty('ProductImg is required').optional(),
+    // productImg: z.string().nonempty('ProductImg is required').optional(),
     brand: z.enum(
       [
         'CityRide',
@@ -50,7 +50,7 @@ const createBicycleValidationSchema = z.object({
 const updateBicycleValidationSchema = z.object({
   body: z.object({
     name: z.string().nonempty('Name is required').optional(),
-    productImg: z.string().nonempty('ProductImg is required').optional(),
+    // productImg: z.string().nonempty('ProductImg is required').optional(),
     brand: z.string().nonempty('Brand is required').optional(),
     price: z.number().min(0, 'Price must be a positive number').optional(),
     model: z

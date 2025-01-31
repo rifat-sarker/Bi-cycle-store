@@ -5,17 +5,24 @@ import httpStatus from 'http-status';
 
 // create a bicycle
 const createBicycle = catchAsync(async (req, res) => {
-  {
-    const bicycleData = req.body; // name alias
-    const result = await BicycleServices.createBicycleIntoDB(bicycleData);
+  const bicycleData = req.body;
+  const file = req.file;
 
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Bicycle is created successfully',
-      data: result,
-    });
+  if (!file) {
+    throw new Error('Image file is required');
   }
+
+  if (!bicycleData) {
+    throw new Error('Bicycle data is required');
+  }
+
+  const result = await BicycleServices.createBicycleIntoDB(file, bicycleData);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Bicycle is created successfully',
+    data: result,
+  });
 });
 
 //get all bicycle

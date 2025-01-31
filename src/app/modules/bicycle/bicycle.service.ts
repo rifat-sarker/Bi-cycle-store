@@ -1,11 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import QueryBuilder from '../../builder/QueryBuilder';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { bicycleSearchableFields } from './bicycle.constant';
 import { TBicycle } from './bicycle.interface';
 import { Bicycle } from './bicycle.model';
 
-const createBicycleIntoDB = async (bicycleData: TBicycle) => {
-  const result = await Bicycle.create(bicycleData);
-  return result;
+const createBicycleIntoDB = async (file: any, bicycleData: TBicycle) => {
+  try {
+    if (file) {
+      const imageName = 'productimage';
+      const path = file?.path;
+
+      const { secure_url } = await sendImageToCloudinary(path, imageName);
+      bicycleData.productImg = secure_url as string;
+    }
+
+    const result = await Bicycle.create(bicycleData);
+    return result;
+  } catch (error) {
+    console.error('Error in createBicycleIntoDB:', error);
+    throw new Error('Failed to create bicycle in DB');
+  }
 };
 
 const getAllBicycleFromDB = async (query: Record<string, unknown>) => {
