@@ -29,19 +29,20 @@ const createBicycle = catchAsync(async (req, res) => {
 const getAllBicycle = catchAsync(async (req, res) => {
   const result = await BicycleServices.getAllBicycleFromDB(req.query);
 
-  if (!result.length) {
-    res.status(404).json({
-      message: 'No bicycles found matching your search criteria.',
-      success: false,
-      data: [],
-    });
-    return;
-  }
+  // if (!result.length) {
+  //   res.status(404).json({
+  //     message: 'No bicycles found matching your search criteria.',
+  //     success: false,
+  //     data: [],
+  //   });
+  //   return;
+  // }
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Bicycles retrieved successfully',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   });
 });
 
