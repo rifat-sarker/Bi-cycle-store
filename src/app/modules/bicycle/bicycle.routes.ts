@@ -28,7 +28,7 @@ router.get('/', BicycleController.getAllBicycle);
 router.get('/:productId', BicycleController.getASpecificBicycle);
 
 //update bicycle
-router.put(
+router.patch(
   '/:productId',
   auth(USER_ROLE.admin),
   validateRequest(BicycleValidation.updateBicycleValidationSchema),
