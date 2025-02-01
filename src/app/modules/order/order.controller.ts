@@ -80,12 +80,13 @@ const createOrder = catchAsync(async (req, res) => {
 });
 
 const getAllOrders = catchAsync(async (req, res) => {
-  const result = await OrderServices.getAllOrdersFromDB();
+  const result = await OrderServices.getAllOrdersFromDB(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'All order  is retrieved successfully',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   });
 });
 

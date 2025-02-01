@@ -16,22 +16,31 @@ router.post(
 );
 
 //get all order
-router.get('/', auth(USER_ROLE.customer), OrderController.getAllOrders);
+router.get(
+  '/',
+  auth(USER_ROLE.customer, USER_ROLE.admin),
+  OrderController.getAllOrders,
+);
 
 //get single order
 router.get(
   '/:orderId',
-  auth(USER_ROLE.customer),
+  auth(USER_ROLE.customer, USER_ROLE.admin),
   OrderController.getSingleOrder,
 );
 
 // update order
-router.put('/:orderId', auth(USER_ROLE.customer), OrderController.updateOrder);
+router.patch(
+  '/:orderId',
+  auth(USER_ROLE.customer, USER_ROLE.admin),
+  validateRequest(OrderValidations.updateOrderSchema),
+  OrderController.updateOrder,
+);
 
 // detete order
 router.delete(
   '/:orderId',
-  auth(USER_ROLE.customer),
+  auth(USER_ROLE.customer, USER_ROLE.admin),
   OrderController.deleteOrder,
 );
 

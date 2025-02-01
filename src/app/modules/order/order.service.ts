@@ -1,3 +1,5 @@
+import QueryBuilder from '../../builder/QueryBuilder';
+import { orderSearchableFields } from './order.constant';
 import { TOrder } from './order.interface';
 import { Order } from './order.model';
 
@@ -6,12 +8,16 @@ const createOrderIntoDB = async (orderData: TOrder) => {
   return result;
 };
 
-const getAllOrdersFromDB = async () => {
-  const result = await Order.find().populate(
-    'details',
-    'name description price',
-  );
-  return result;
+const getAllOrdersFromDB = async (query: Record<string, unknown>) => {
+  const orderQuery = new QueryBuilder(Order.find(), query)
+    .search(orderSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+  const meta = await orderQuery.countTotal();
+  const result = await orderQuery.modelQuery;
+  return { meta, result };
 };
 
 const getSingleOrderFromDB = async (id: string) => {
