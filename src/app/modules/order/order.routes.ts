@@ -22,6 +22,9 @@ router.get(
   OrderController.getAllOrders,
 );
 
+//verify order
+router.get('/verify', auth(USER_ROLE.customer), OrderController.verifyPayment);
+
 //get single order
 router.get(
   '/:orderId',

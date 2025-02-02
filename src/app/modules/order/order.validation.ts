@@ -2,36 +2,44 @@ import { z } from 'zod';
 
 const createOrderSchema = z.object({
   body: z.object({
-    email: z.string().email({ message: 'Invalid email address' }).optional(),
-    product: z.string().nonempty({ message: 'Product ID is required' }),
-    details: z.string().nonempty('Details is required').optional(),
-    quantity: z
-      .number()
-      .int()
-      .positive({ message: 'Quantity must be a positive integer' }),
-    // totalPrice: z
-    //   .number()
-    //   .positive({ message: 'Total price must be a positive number' }),
+    products: z.array(
+      z.object({
+        product: z.string().min(1, 'Product ID is required'),
+        quantity: z.number().int().min(1, 'Quantity must be at least 1'),
+      })
+    ).nonempty('At least one product is required'),
+    transaction: z.object({
+      id: z.string().optional(),
+      transactionStatus: z.string().optional(),
+      bank_status: z.string().optional(),
+      sp_code: z.string().optional(),
+      sp_message: z.string().optional(),
+      method: z.string().optional(),
+      date_time: z.string().optional(),
+    }).optional(),
   }),
 });
 
-const updateOrderSchema = z.object({
+export const updateOrderSchema = z.object({
   body: z.object({
-    email: z.string().email({ message: 'Invalid email address' }).optional(),
-    product: z
-      .string()
-      .nonempty({ message: 'Product ID is required' })
-      .optional(),
-    details: z.string().nonempty('Details is required').optional(),
-    quantity: z
-      .number()
-      .int()
-      .positive({ message: 'Quantity must be a positive integer' })
-      .optional(),
-    totalPrice: z
-      .number()
-      .positive({ message: 'Total price must be a positive number' })
-      .optional(),
+    email: z.string().email('Invalid email format').optional(),
+    products: z.array(
+      z.object({
+        product: z.string().min(1, 'Product ID is required').optional(),
+        quantity: z.number().int().min(1, 'Quantity must be at least 1').optional(),
+      })
+    ).optional(),
+    totalPrice: z.number().min(0, 'Total price must be a positive number').optional(),
+    status: z.enum(['Pending', 'Paid', 'Shipped', 'Completed', 'Cancelled']).optional(),
+    transaction: z.object({
+      id: z.string().optional(),
+      transactionStatus: z.string().optional(),
+      bank_status: z.string().optional(),
+      sp_code: z.string().optional(),
+      sp_message: z.string().optional(),
+      method: z.string().optional(),
+      date_time: z.string().optional(),
+    }).optional(),
   }),
 });
 

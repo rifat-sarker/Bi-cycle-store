@@ -38,6 +38,9 @@ const userSchema = new Schema<TUser, UserModel>(
       enum: ['admin', 'customer'],
       default: 'customer',
     },
+    phone: { type: String, default: 'N/A' },
+    address: { type: String, default: 'N/A' },
+    city: { type: String, default: 'N/A' },
     status: {
       type: String,
       enum: UserStatus,

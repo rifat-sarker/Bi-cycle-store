@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { OrderServices } from './order.service';
-import { BicycleServices } from '../bicycle/bicycle.service';
 import { Request, Response } from 'express';
 import catchAsync from '../../utils/catchAsync';
 import httpStatus from 'http-status';
 import sendResponse from '../../utils/sendResponse';
-import { User } from '../user/user.model';
 
 const createOrder = catchAsync(async (req, res) => {
   const orderData = req.body;
@@ -19,74 +17,59 @@ const createOrder = catchAsync(async (req, res) => {
     return;
   }
 
-  const { product, quantity } = orderData;
-
-  // Get product (bicycle) details
-  const bicycle = await BicycleServices.getASpecificBicycleFromDB(product);
-
-  if (!bicycle) {
-    res.status(404).json({
-      message: 'Bicycle not found',
-      status: false,
-    });
-    return;
-  }
-
-  if (bicycle.quantity === undefined || bicycle.quantity < quantity) {
+  if (!orderData?.products?.length) {
     res.status(400).json({
-      message:
-        bicycle.quantity === undefined
-          ? 'Bicycle quantity is undefined'
-          : 'Insufficient stock available',
+      message: 'No products found in order',
       status: false,
     });
     return;
   }
 
-  // Update the bicycle stock
-  await BicycleServices.updateBicycleIntoDB(product, {
-    quantity: bicycle.quantity - quantity,
-    stock: bicycle.quantity - quantity > 0,
-  });
+  const result = await OrderServices.createOrderIntoDB(
+    userEmail,
+    orderData,
+    req.ip!,
+  );
 
-  const user = await User.findOne({ email: userEmail });
-  if (!user) {
-    res.status(404).json({
-      message: 'User not found',
+ 
+  // Check if the result is an error object
+  if (typeof result !== 'string' && result?.error) {
+    res.status(result.statusCode).json({
+      message: result.message,
       status: false,
     });
     return;
   }
-
-  const orderDetails = {
-    ...orderData,
-    user: user._id,
-    email: user.email,
-    product: bicycle.name,
-    details: bicycle._id,
-    quantity,
-    totalPrice: bicycle.price! * quantity,
-  };
-
-  // Create the order
-  const result = await OrderServices.createOrderIntoDB(orderDetails);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Order created successfully',
+    message: 'Order placed successfully',
     data: result,
   });
 });
+
+
 
 const getAllOrders = catchAsync(async (req, res) => {
   const result = await OrderServices.getAllOrdersFromDB(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'All order  is retrieved successfully',
+    message: 'Order retrieved successfully',
     meta: result.meta,
     data: result.result,
+  });
+});
+
+const verifyPayment = catchAsync(async (req, res) => {
+  const order = await OrderServices.verifyPayment(req.query.order_id as string);
+
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'Order verified successfully',
+    data: order,
   });
 });
 
@@ -148,6 +131,7 @@ const calculateRevenue = async (req: Request, res: Response) => {
 export const OrderController = {
   createOrder,
   getAllOrders,
+  verifyPayment,
   getSingleOrder,
   updateOrder,
   deleteOrder,

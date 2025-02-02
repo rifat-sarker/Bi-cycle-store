@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
-import { Model } from "mongoose";
-import { USER_ROLE } from "./user.constant";
+import { Model } from 'mongoose';
+import { USER_ROLE } from './user.constant';
 
 export interface TUser {
   // id: Types.ObjectId;
@@ -9,6 +9,9 @@ export interface TUser {
   email: string;
   password: string;
   needsPasswordChange: boolean;
+  phone?: string;
+  address?: string;
+  city?: string;
   passwordChangedAt?: Date;
   role: 'admin' | 'customer';
   status: 'in-progress' | 'blocked';
@@ -28,6 +31,5 @@ export interface UserModel extends Model<TUser> {
     jwtIssuedTimestamp: number,
   ): boolean;
 }
-
 
 export type TUserRole = keyof typeof USER_ROLE;

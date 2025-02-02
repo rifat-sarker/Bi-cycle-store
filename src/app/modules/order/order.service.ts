@@ -1,11 +1,149 @@
+import httpStatus from 'http-status';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { orderSearchableFields } from './order.constant';
 import { TOrder } from './order.interface';
 import { Order } from './order.model';
+import { Bicycle } from '../bicycle/bicycle.model';
+import { orderUtils } from './order.utils';
+import { User } from '../user/user.model';
 
-const createOrderIntoDB = async (orderData: TOrder) => {
-  const result = await Order.create(orderData);
-  return result;
+const createOrderIntoDB = async (
+  userEmail: string,
+  payload: { products: { product: string; quantity: number }[] },
+  client_ip: string,
+) => {
+  const user = await User.findOne({ email: userEmail });
+
+  if (!user) {
+    return {
+      error: true,
+      statusCode: httpStatus.NOT_FOUND,
+      message: 'User not found',
+    };
+  }
+
+  if (!user.address || !user.phone || !user.city) {
+    return {
+      error: true,
+      statusCode: httpStatus.BAD_REQUEST,
+      message: 'Missing required user information (address, phone, or city)',
+    };
+  }
+
+  if (!payload?.products?.length) {
+    return {
+      error: true,
+      statusCode: httpStatus.BAD_REQUEST,
+      message: 'No products found in order',
+    };
+  }
+
+  const productId = payload.products[0]?.product;
+  const quantity = payload.products[0]?.quantity;
+
+  if (!productId || !quantity) {
+    return {
+      error: true,
+      statusCode: httpStatus.BAD_REQUEST,
+      message: 'Product ID or quantity is missing',
+    };
+  }
+
+  const bicycle = await Bicycle.findById(productId);
+  if (!bicycle) {
+    return {
+      error: true,
+      statusCode: httpStatus.NOT_FOUND,
+      message: 'Bicycle not found',
+    };
+  }
+
+  if (bicycle.quantity === undefined || bicycle.quantity < quantity) {
+    return {
+      error: true,
+      statusCode: httpStatus.BAD_REQUEST,
+      message:
+        bicycle.quantity === undefined
+          ? 'Bicycle quantity is undefined'
+          : 'Insufficient stock available',
+    };
+  }
+
+  await Bicycle.updateOne(
+    { _id: productId },
+    {
+      quantity: bicycle.quantity - quantity,
+      stock: bicycle.quantity - quantity > 0,
+    },
+  );
+
+  const totalPrice = bicycle.price! * quantity;
+  const orderDetails = {
+    products: payload.products,
+    totalPrice,
+  };
+
+  let order = await Order.create({
+    user,
+    products: orderDetails.products,
+    totalPrice,
+  });
+
+  // Payment integration
+  const shurjopayPayload = {
+    amount: totalPrice,
+    order_id: order._id,
+    currency: 'BDT',
+    customer_name: user.name,
+    customer_address: user.address,
+    customer_email: user.email,
+    customer_phone: user.phone,
+    customer_city: user.city,
+    client_ip,
+  };
+
+  const payment = await orderUtils.makePaymentAsync(shurjopayPayload);
+
+  if (payment?.transactionStatus) {
+    order = await order.updateOne({
+      transaction: {
+        id: payment.sp_order_id,
+        transactionStatus: payment.transactionStatus,
+      },
+    });
+  }
+
+  return payment.checkout_url;
+};
+
+const verifyPayment = async (order_id: string) => {
+  const verifiedPayment = await orderUtils.verifyPaymentAsync(order_id);
+
+  if (verifiedPayment.length) {
+    await Order.findOneAndUpdate(
+      {
+        'transaction.id': order_id,
+      },
+      {
+        'transaction.bank_status': verifiedPayment[0].bank_status,
+        'transaction.sp_code': verifiedPayment[0].sp_code,
+        'transaction.sp_message': verifiedPayment[0].sp_message,
+        'transaction.transactionStatus': verifiedPayment[0].transaction_status,
+        'transaction.method': verifiedPayment[0].method,
+        'transaction.date_time': verifiedPayment[0].date_time,
+        status:
+          verifiedPayment[0].bank_status == 'Success'
+            ? 'Paid'
+            : verifiedPayment[0].bank_status == 'Failed'
+              ? 'Pending'
+              : verifiedPayment[0].bank_status == 'Cancel'
+                ? 'Cancelled'
+                : '',
+      },
+    );
+  }
+
+  return verifiedPayment;
 };
 
 const getAllOrdersFromDB = async (query: Record<string, unknown>) => {
@@ -59,6 +197,8 @@ const calculateRevenueFromDB = async () => {
 
 export const OrderServices = {
   createOrderIntoDB,
+  // getOrders,
+  verifyPayment,
   getAllOrdersFromDB,
   getSingleOrderFromDB,
   updateOrderIntoDB,

@@ -27,6 +27,7 @@
     "mongoose": "^8.8.2",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.7",
+    "shurjopay": "^0.12.1",
     "ts-node-dev": "^2.0.0",
     "zod": "^3.23.8"
   },
