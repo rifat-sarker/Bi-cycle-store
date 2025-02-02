@@ -10,7 +10,7 @@ const router = express.Router();
 //create order
 router.post(
   '/',
-  auth(USER_ROLE.customer),
+  auth(USER_ROLE.customer, USER_ROLE.admin),
   validateRequest(OrderValidations.createOrderSchema),
   OrderController.createOrder,
 );
