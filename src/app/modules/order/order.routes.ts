@@ -23,7 +23,11 @@ router.get(
 );
 
 //verify order
-router.get('/verify', auth(USER_ROLE.customer), OrderController.verifyPayment);
+router.get(
+  '/verify',
+  auth(USER_ROLE.customer, USER_ROLE.admin),
+  OrderController.verifyPayment,
+);
 
 //get single order
 router.get(

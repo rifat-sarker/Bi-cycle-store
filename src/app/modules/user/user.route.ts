@@ -19,4 +19,12 @@ router.post(
   validateRequest(AdminValidations.createAdminValidationSchema),
   UserControllers.createAdmin,
 );
-export const UserRoutes = router;
+
+router.patch(
+  '/:userId',
+  validateRequest(UserValidation.updateUserValidationSchema),
+  UserControllers.updateUser,
+);
+
+// router.delete('/:userId', UserControllers.d)
+// export const UserRoutes = router;

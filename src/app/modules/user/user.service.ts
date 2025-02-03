@@ -48,8 +48,15 @@ const getAllUsersFromDB = async () => {
   return result;
 };
 
+const updateUserIntoDB = async (id: string, payload: Partial<TUser>) => {
+  const result = await User.findByIdAndUpdate(id, payload);
+  return result;
+};
+
+
 export const UserServices = {
   createUserIntoDB,
   createAdminIntoDB,
   getAllUsersFromDB,
+  updateUserIntoDB,
 };
