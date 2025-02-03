@@ -12,7 +12,7 @@ router.post(
   validateRequest(UserValidation.createUserValidationSchema),
   UserControllers.createUser,
 );
-router.get('/', UserControllers.getAllUsers);
+router.get('/', auth(USER_ROLE.admin), UserControllers.getAllUsers);
 router.post(
   '/create-admin',
   auth(USER_ROLE.admin),
@@ -22,9 +22,11 @@ router.post(
 
 router.patch(
   '/:userId',
+  auth(USER_ROLE.admin),
   validateRequest(UserValidation.updateUserValidationSchema),
   UserControllers.updateUser,
 );
 
-router.delete('/:userId', UserControllers.deleteUser);
+router.delete('/:userId', auth(USER_ROLE.admin), UserControllers.deleteUser);
+
 export const UserRoutes = router;

@@ -16,11 +16,7 @@ router.post(
 );
 
 //get all order
-router.get(
-  '/',
-  auth(USER_ROLE.customer, USER_ROLE.admin),
-  OrderController.getAllOrders,
-);
+router.get('/', auth(USER_ROLE.admin), OrderController.getAllOrders);
 
 //verify order
 router.get(

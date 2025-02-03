@@ -52,6 +52,7 @@ const createOrder = catchAsync(async (req, res) => {
 
 
 const getAllOrders = catchAsync(async (req, res) => {
+ 
   const result = await OrderServices.getAllOrdersFromDB(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
