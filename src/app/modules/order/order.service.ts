@@ -147,7 +147,7 @@ const verifyPayment = async (order_id: string) => {
 };
 
 const getAllOrdersFromDB = async (query: Record<string, unknown>) => {
-  const orderQuery = new QueryBuilder(Order.find(), query)
+  const orderQuery = new QueryBuilder(Order.find().populate('user'), query)
     .search(orderSearchableFields)
     .filter()
     .sort()
