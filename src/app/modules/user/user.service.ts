@@ -29,7 +29,7 @@ const createUserIntoDB = async (userData: TUser) => {
   const accessToken = createToken(
     jwtPayload,
     config.jwt_access_secret as string,
-    config.jwt_access_expires_in as string,
+    6000
   );
 
   return {

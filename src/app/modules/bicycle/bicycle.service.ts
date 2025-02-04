@@ -5,14 +5,19 @@ import { bicycleSearchableFields } from './bicycle.constant';
 import { TBicycle } from './bicycle.interface';
 import { Bicycle } from './bicycle.model';
 
+type CloudinaryResponse = {
+  secure_url: string;
+};
+
 const createBicycleIntoDB = async (file: any, bicycleData: TBicycle) => {
   try {
     if (file) {
       const imageName = bicycleData.name || 'bicycle';
       const path = file?.path;
 
-      const { secure_url } = await sendImageToCloudinary(path, imageName);
-      bicycleData.productImg = secure_url as string;
+      const response = await sendImageToCloudinary(path, imageName);
+      const { secure_url }: CloudinaryResponse = response as CloudinaryResponse;
+      bicycleData.productImg = secure_url;
     }
 
     const result = await Bicycle.create(bicycleData);

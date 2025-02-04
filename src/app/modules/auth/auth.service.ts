@@ -1,7 +1,6 @@
 import httpStatus from 'http-status';
 import config from '../../config';
 import bcrypt from 'bcrypt';
-import { JwtPayload } from 'jsonwebtoken';
 import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
 import { TLoginUser } from './auth.interface';
@@ -40,7 +39,7 @@ const loginUser = async (payload: TLoginUser) => {
   const accessToken = createToken(
     jwtPayload,
     config.jwt_access_secret as string,
-    config.jwt_access_expires_in as string,
+    6000
   );
 
 
