@@ -28,6 +28,7 @@ router.get(
   auth(USER_ROLE.customer, USER_ROLE.admin),
   OrderController.verifyPayment,
 );
+router.get('/revenue', auth(USER_ROLE.admin), OrderController.calculateRevenue);
 
 //get single order
 router.get(
@@ -52,6 +53,5 @@ router.delete(
 );
 
 // calculate revenue
-router.get('/revenue', auth(USER_ROLE.admin), OrderController.calculateRevenue);
 
 export const OrderRoutes = router;

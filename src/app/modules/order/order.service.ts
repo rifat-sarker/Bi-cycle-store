@@ -79,19 +79,25 @@ const createOrderIntoDB = async (
       [
         {
           $set: {
-            quantity: { $subtract: ["$quantity", quantity] }, 
-            stock: { $cond: [{ $gt: [{ $subtract: ["$quantity", quantity] }, 0] }, true, false] } 
-          }
-        }
+            quantity: { $subtract: ['$quantity', quantity] },
+            stock: {
+              $cond: [
+                { $gt: [{ $subtract: ['$quantity', quantity] }, 0] },
+                true,
+                false,
+              ],
+            },
+          },
+        },
       ],
-      { new: true }
+      { new: true },
     );
 
     if (!updatedBicycle) {
       return {
         error: true,
         statusCode: httpStatus.BAD_REQUEST,
-        message: "Failed to update bicycle stock",
+        message: 'Failed to update bicycle stock',
       };
     }
 
@@ -140,7 +146,6 @@ const createOrderIntoDB = async (
 
   return payment.checkout_url;
 };
-
 
 const verifyPayment = async (order_id: string) => {
   const verifiedPayment = await orderUtils.verifyPaymentAsync(order_id);
@@ -201,25 +206,45 @@ const deleteOrderFromDB = async (id: string) => {
   return result;
 };
 
-const calculateRevenueFromDB = async () => {
-  const result = await Order.aggregate([
-    {
-      $addFields: {
-        totalRevenue: {
-          $multiply: ['$totalPrice', '$quantity'],
+const calculateRevenueFromDB = async (): Promise<number> => {
+  try {
+    const result = await Order.aggregate([
+      {
+        $unwind: '$products', // Separate products for accurate calculation
+      },
+      {
+        $lookup: {
+          from: 'bicycles', // Ensure the referenced collection name is correct
+          localField: 'products.product',
+          foreignField: '_id',
+          as: 'productDetails',
         },
       },
-    },
-    {
-      $group: {
-        _id: null,
-        totalRevenue: { $sum: '$totalRevenue' },
+      {
+        $unwind: '$productDetails', // Unwind to access product prices
       },
-    },
-  ]);
+      {
+        $addFields: {
+          totalRevenue: {
+            $multiply: ['$productDetails.price', '$products.quantity'],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: '$totalRevenue' },
+        },
+      },
+    ]);
 
-  return result[0]?.totalRevenue || 0;
+    return result[0]?.totalRevenue || 0;
+  } catch (error: any) {
+    throw new Error('Error calculating revenue from database');
+  }
 };
+
+
 
 export const OrderServices = {
   createOrderIntoDB,

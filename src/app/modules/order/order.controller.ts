@@ -31,7 +31,6 @@ const createOrder = catchAsync(async (req, res) => {
     req.ip!,
   );
 
- 
   // Check if the result is an error object
   if (typeof result !== 'string' && result?.error) {
     res.status(result.statusCode).json({
@@ -49,10 +48,7 @@ const createOrder = catchAsync(async (req, res) => {
   });
 });
 
-
-
 const getAllOrders = catchAsync(async (req, res) => {
- 
   const result = await OrderServices.getAllOrdersFromDB(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -110,24 +106,27 @@ const deleteOrder = catchAsync(async (req, res) => {
 
 const calculateRevenue = async (req: Request, res: Response) => {
   try {
-    const totalRevenue = await OrderServices.calculateRevenueFromDB();
+    const totalRevenue = await OrderServices.calculateRevenueFromDB(); // Call the service method
 
     res.status(200).json({
       message: 'Revenue calculated successfully',
-      status: true,
+      success: true,
       data: { totalRevenue },
     });
   } catch (error: any) {
+    const errorMessage =
+      error?.message || 'Something went wrong while calculating revenue';
+
     res.status(500).json({
       message: 'Failed to calculate revenue',
       success: false,
       error: {
-        ...error,
-        stack: `Error: Something went wrong! ${error.stack}`,
+        message: errorMessage, // Only include the error message in the response
       },
     });
   }
 };
+
 
 export const OrderController = {
   createOrder,
