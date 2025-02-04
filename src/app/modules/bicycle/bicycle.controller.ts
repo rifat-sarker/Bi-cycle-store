@@ -2,6 +2,7 @@ import { BicycleServices } from './bicycle.service';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
+import { updateBicycleStock } from './bicycle.utility';
 
 // create a bicycle
 const createBicycle = catchAsync(async (req, res) => {
@@ -61,7 +62,9 @@ const getASpecificBicycle = catchAsync(async (req, res) => {
 const updateBicycle = catchAsync(async (req, res) => {
   const { productId } = req.params;
   const result = await BicycleServices.updateBicycleIntoDB(productId, req.body);
-  res.send({
+  await updateBicycleStock(productId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
     success: true,
     message: 'Bicycle updated successfully',
     data: result,

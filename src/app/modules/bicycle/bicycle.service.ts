@@ -42,7 +42,10 @@ const getASpecificBicycleFromDB = async (_id: string) => {
 };
 
 const updateBicycleIntoDB = async (_id: string, payload: Partial<TBicycle>) => {
-  const result = await Bicycle.findByIdAndUpdate(_id, payload);
+  const result = await Bicycle.findByIdAndUpdate(_id, payload, {
+    new: true,
+    runValidators: true,
+  });
   return result;
 };
 

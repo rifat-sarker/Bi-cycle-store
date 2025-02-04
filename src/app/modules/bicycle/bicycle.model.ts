@@ -62,15 +62,17 @@ const bicycleSchema = new Schema<TBicycle>(
     quantity: {
       type: Number,
       required: true,
+      default: 0,
     },
     stock: {
       type: Boolean,
       required: true,
-      // default: true,
+      default: true,
     },
   },
   { timestamps: true, versionKey: false },
 );
+
 
 // create Bicycle model
 export const Bicycle = model<TBicycle>('Bicycle', bicycleSchema);

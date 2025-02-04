@@ -38,46 +38,71 @@ const createOrderIntoDB = async (
     };
   }
 
-  const productId = payload.products[0]?.product;
-  const quantity = payload.products[0]?.quantity;
+  const updatedBicycles = [];
 
-  if (!productId || !quantity) {
-    return {
-      error: true,
-      statusCode: httpStatus.BAD_REQUEST,
-      message: 'Product ID or quantity is missing',
-    };
+  // Loop through each product in the order to update its quantity and stock
+  for (const product of payload.products) {
+    const { product: productId, quantity } = product;
+
+    if (!productId || !quantity) {
+      return {
+        error: true,
+        statusCode: httpStatus.BAD_REQUEST,
+        message: 'Product ID or quantity is missing',
+      };
+    }
+
+    const bicycle = await Bicycle.findById(productId);
+    if (!bicycle) {
+      return {
+        error: true,
+        statusCode: httpStatus.NOT_FOUND,
+        message: 'Bicycle not found',
+      };
+    }
+
+    // Check if the stock is sufficient
+    if (bicycle.quantity === undefined || bicycle.quantity < quantity) {
+      return {
+        error: true,
+        statusCode: httpStatus.BAD_REQUEST,
+        message:
+          bicycle.quantity === undefined
+            ? 'Bicycle quantity is undefined'
+            : 'Insufficient stock available',
+      };
+    }
+
+    // Update the stock and quantity before updating the bicycle
+    const updatedBicycle = await Bicycle.findOneAndUpdate(
+      { _id: productId },
+      [
+        {
+          $set: {
+            quantity: { $subtract: ["$quantity", quantity] }, 
+            stock: { $cond: [{ $gt: [{ $subtract: ["$quantity", quantity] }, 0] }, true, false] } 
+          }
+        }
+      ],
+      { new: true }
+    );
+
+    if (!updatedBicycle) {
+      return {
+        error: true,
+        statusCode: httpStatus.BAD_REQUEST,
+        message: "Failed to update bicycle stock",
+      };
+    }
+
+    updatedBicycles.push(updatedBicycle);
   }
 
-  const bicycle = await Bicycle.findById(productId);
-  if (!bicycle) {
-    return {
-      error: true,
-      statusCode: httpStatus.NOT_FOUND,
-      message: 'Bicycle not found',
-    };
-  }
+  // Calculate total price of the order
+  const totalPrice = updatedBicycles.reduce((total, bicycle, index) => {
+    return total + bicycle.price! * payload.products[index].quantity;
+  }, 0);
 
-  if (bicycle.quantity === undefined || bicycle.quantity < quantity) {
-    return {
-      error: true,
-      statusCode: httpStatus.BAD_REQUEST,
-      message:
-        bicycle.quantity === undefined
-          ? 'Bicycle quantity is undefined'
-          : 'Insufficient stock available',
-    };
-  }
-
-  await Bicycle.updateOne(
-    { _id: productId },
-    {
-      quantity: bicycle.quantity - quantity,
-      stock: bicycle.quantity - quantity > 0,
-    },
-  );
-
-  const totalPrice = bicycle.price! * quantity;
   const orderDetails = {
     products: payload.products,
     totalPrice,
@@ -115,6 +140,7 @@ const createOrderIntoDB = async (
 
   return payment.checkout_url;
 };
+
 
 const verifyPayment = async (order_id: string) => {
   const verifiedPayment = await orderUtils.verifyPaymentAsync(order_id);
