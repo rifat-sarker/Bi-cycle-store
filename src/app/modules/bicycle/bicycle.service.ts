@@ -11,22 +11,34 @@ type CloudinaryResponse = {
 
 const createBicycleIntoDB = async (file: any, bicycleData: TBicycle) => {
   try {
-    if (file) {
+    if (file && file.path) {
       const imageName = bicycleData.name || 'bicycle';
-      const path = file?.path;
+      const path = file.path;
 
       const response = await sendImageToCloudinary(path, imageName);
-      const { secure_url }: CloudinaryResponse = response as CloudinaryResponse;
-      bicycleData.productImg = secure_url;
+
+      if (response && (response as CloudinaryResponse).secure_url) {
+        const { secure_url }: CloudinaryResponse = response as CloudinaryResponse;
+        bicycleData.productImg = secure_url;
+      } else {
+        throw new Error("Failed to upload image to Cloudinary");
+      }
+    }
+
+    // Ensure required fields exist before creating the bicycle
+    if (!bicycleData.name || !bicycleData.price) {
+      throw new Error("Missing required bicycle data fields");
     }
 
     const result = await Bicycle.create(bicycleData);
     return result;
   } catch (error) {
-    console.error('Error in createBicycleIntoDB:', error);
-    throw new Error('Failed to create bicycle in DB');
+    console.error("Error in createBicycleIntoDB:", error);
+    throw new Error("Failed to create bicycle in DB");
   }
 };
+
+
 
 const getAllBicycleFromDB = async (query: Record<string, unknown>) => {
   const bicycleQuery = new QueryBuilder(Bicycle.find(), query)
