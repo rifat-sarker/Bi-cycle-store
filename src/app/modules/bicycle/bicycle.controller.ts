@@ -6,18 +6,21 @@ import { updateBicycleStock } from './bicycle.utility';
 
 // create a bicycle
 const createBicycle = catchAsync(async (req, res) => {
-  const bicycleData = req.body;
+  // console.log(req.body);
+  // console.log(req.file);
+
+  const bicycleData = req.body // Manually parse the JSON data
   const file = req.file;
 
   if (!file) {
     throw new Error('Image file is required');
   }
 
-  if (!bicycleData) {
-    throw new Error('Bicycle data is required');
-  }
+  const result = await BicycleServices.createBicycleIntoDB({
+    ...bicycleData,
+    productImg: file.path,
+  });
 
-  const result = await BicycleServices.createBicycleIntoDB(file, bicycleData);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -25,6 +28,7 @@ const createBicycle = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
 
 //get all bicycle
 const getAllBicycle = catchAsync(async (req, res) => {

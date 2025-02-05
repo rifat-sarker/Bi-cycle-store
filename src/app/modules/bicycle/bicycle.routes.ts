@@ -4,7 +4,8 @@ import validateRequest from '../../middlewares/validateRequest';
 import { BicycleValidation } from './bicycle.validation';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from '../user/user.constant';
-import { upload } from '../../utils/sendImageToCloudinary';
+// import { upload } from '../../utils/sendImageToCloudinary';
+import { multerUpload } from '../../config/multer.config';
 
 const router = express.Router();
 
@@ -12,7 +13,8 @@ const router = express.Router();
 router.post(
   '/',
   auth(USER_ROLE.admin),
-  upload.single('file'),
+  multerUpload.single('file'),
+  // upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);
     next();

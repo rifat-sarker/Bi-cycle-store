@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import QueryBuilder from '../../builder/QueryBuilder';
-import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
+// import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { bicycleSearchableFields } from './bicycle.constant';
 import { TBicycle } from './bicycle.interface';
 import { Bicycle } from './bicycle.model';
 
-type CloudinaryResponse = {
-  secure_url: string;
-};
+// type CloudinaryResponse = {
+//   secure_url: string;
+// };
 
-const createBicycleIntoDB = async (file: any, bicycleData: TBicycle) => {
+const createBicycleIntoDB = async (bicycleData: TBicycle) => {
   try {
-    if (file) {
-      const imageName = bicycleData.name || 'bicycle';
-      const path = file?.path;
+    // if (file) {
+    //   const imageName = bicycleData.name || 'bicycle';
+    //   const path = file?.path;
 
-      const response = await sendImageToCloudinary(path, imageName);
-      const { secure_url }: CloudinaryResponse = response as CloudinaryResponse;
-      bicycleData.productImg = secure_url;
-    }
+    //   const response = await sendImageToCloudinary(path, imageName);
+    //   const { secure_url }: CloudinaryResponse = response as CloudinaryResponse;
+    //   bicycleData.productImg = secure_url;
+    // }
 
     const result = await Bicycle.create(bicycleData);
     return result;
