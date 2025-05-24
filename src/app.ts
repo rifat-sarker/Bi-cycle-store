@@ -8,16 +8,22 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import notFound from './app/middlewares/notFound';
 const app: Application = express();
 
+// http://localhost:5173
+// 
 // parser
 app.use(express.json());
-app.use(cors({ origin: "https://bicycle-store-client.vercel.app", credentials: true }));
+app.use(
+  cors({
+    origin: 'https://bicycle-store-client.vercel.app',
+    credentials: true,
+  }),
+);
 
 // apps routes
 app.use('/api/products', BicycleRoutes);
 app.use('/api/orders', OrderRoutes);
 app.use('/api/users', UserRoutes);
 app.use('/api/auth', AuthRoutes);
-
 
 //global error handler
 app.use(globalErrorHandler);
