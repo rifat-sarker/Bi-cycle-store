@@ -9,10 +9,16 @@ const router = Router();
 router.get('/', CategoryController.getAllCategory);
 
 router.post(
+  '/bulk-create',
+  validateRequest(categoryValidation.bulkCreateCategoryValidationSchema),
+  CategoryController.createCategories,
+);
+
+router.post(
   '/',
   auth('admin'),
   validateRequest(categoryValidation.createCategoryValidationSchema),
-  CategoryController.createCategory,
+  CategoryController.createCategories,
 );
 
 router.patch(

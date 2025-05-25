@@ -3,16 +3,17 @@ import { CategoryService } from './category.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 
-const createCategory = catchAsync(async (req, res) => {
-  if (!req.user) {
-    throw new Error(' No user found in request');
+const createCategories = catchAsync(async (req, res) => {
+  if (!Array.isArray(req.body)) {
+    throw new Error('Payload must be an array of categories');
   }
-  const result = await CategoryService.createCategory(req.body);
+
+  const result = await CategoryService.createCategories(req.body);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
-    message: 'Category created succesfully',
+    message: 'Categories created successfully',
     data: result,
   });
 });
@@ -54,7 +55,7 @@ const deleteCategory = catchAsync(async (req, res) => {
 });
 
 export const CategoryController = {
-  createCategory,
+  createCategories,
   getAllCategory,
   updateCategory,
   deleteCategory,

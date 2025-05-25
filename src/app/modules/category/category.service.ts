@@ -1,18 +1,11 @@
 import QueryBuilder from '../../builder/QueryBuilder';
 import { ICategory } from './category.interface';
 import { Category } from './category.model';
-
-
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 
-const createCategory = async (categoryData: ICategory) => {
-  const category = new Category({
-    categoryData,
-  });
-
-  const result = await category.save();
-
+const createCategories = async (categories: ICategory[]) => {
+  const result = await Category.insertMany(categories);
   return result;
 };
 
@@ -82,7 +75,7 @@ const deleteCategoryIntoDB = async (id: string) => {
 };
 
 export const CategoryService = {
-  createCategory,
+  createCategories,
   getAllCategory,
   updateCategoryIntoDB,
   deleteCategoryIntoDB,
