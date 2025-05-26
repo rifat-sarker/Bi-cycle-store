@@ -7,13 +7,22 @@ const app: Application = express();
 
 // https://bicycle-store-client.vercel.app
 // parser
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: [
+      'https://bicycle-store-client.vercel.app',
+      'http://localhost:5173',
+    ],
     credentials: true,
   }),
 );
+
+
+// ✅ Preflight support
+app.options('*', cors());
 
 // apps routes
 app.use('/api', router);
