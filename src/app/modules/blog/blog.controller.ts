@@ -5,24 +5,20 @@ import { BlogService } from './blog.service';
 
 const createBlog = catchAsync(async (req, res) => {
   const file = req.file;
-  const user = req.user;
+  const user = req.user?.id;
+
+  console.log('ifat', user);
 
   if (!file) {
     throw new Error('Image file is required');
   }
 
-  const { title, content, category } = req.body;
-
-  if (!title || !content || !category) {
-    throw new Error('Missing required blog fields');
-  }
+  console.log(req.body);
 
   const blogData = {
-    title,
-    content,
-    category,
-    authorId: user._id,
-    ...(file && { image: file.path }),
+    ...req.body,
+    image: file.path,
+    authorId: user,
   };
 
   console.log(blogData);
