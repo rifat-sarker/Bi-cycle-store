@@ -11,6 +11,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
 
+
     // checking if the token is missing
     if (!token) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
@@ -33,7 +34,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED, 'Unauthorized');
     }
 
-    const { email, role, iat } = decoded;
+    const { email, role, iat,  } = decoded;
 
     // if (!email || !role) {
     //   throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token payload');
@@ -78,6 +79,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
     }
 
     req.user = decoded as JwtPayload ;
+    console.log(req.user);
     next();
   });
 };

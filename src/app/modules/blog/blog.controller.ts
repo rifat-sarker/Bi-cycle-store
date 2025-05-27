@@ -5,23 +5,19 @@ import { BlogService } from './blog.service';
 
 const createBlog = catchAsync(async (req, res) => {
   const file = req.file;
-  const user = req.user?.id;
+  const user = req.user;
 
-  console.log('ifat', user);
+  console.log('rifat', user);
 
   if (!file) {
     throw new Error('Image file is required');
   }
 
-  console.log(req.body);
-
   const blogData = {
     ...req.body,
     image: file.path,
-    authorId: user,
+    authorId: user?.id,
   };
-
-  console.log(blogData);
 
   const result = await BlogService.createBlogIntoDB(blogData);
 

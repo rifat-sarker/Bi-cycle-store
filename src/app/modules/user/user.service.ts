@@ -22,6 +22,7 @@ const createUserIntoDB = async (userData: TUser) => {
 
   // 🔹 Generate token for the newly created user
   const jwtPayload = {
+    id: newUser._id,
     email: newUser.email,
     role: newUser.role,
   };
@@ -29,7 +30,7 @@ const createUserIntoDB = async (userData: TUser) => {
   const accessToken = createToken(
     jwtPayload,
     config.jwt_access_secret as string,
-    6000
+    6000,
   );
 
   return {
