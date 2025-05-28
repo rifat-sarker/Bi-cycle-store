@@ -24,12 +24,38 @@ class QueryBuilder<T> {
     return this;
   }
 
-  filter() {
-    const queryObj = { ...this.query }; //copy
+  // filter() {
+  //   const queryObj = { ...this.query }; //copy
 
-    // filetering
+  //   // filetering
+  //   const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
+  //   excludeFields.forEach((el) => delete queryObj[el]);
+
+  //   this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
+
+  //   return this;
+  // }
+
+  filter() {
+    const queryObj = { ...this.query }; // make a shallow copy of the query object
+
+    // filtering
     const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
     excludeFields.forEach((el) => delete queryObj[el]);
+
+    // ✅ Handle price range filtering
+    const priceFilter: any = {};
+    if (queryObj.minPrice || queryObj.maxPrice) {
+      if (queryObj.minPrice) {
+        priceFilter.$gte = Number(queryObj.minPrice);
+      }
+      if (queryObj.maxPrice) {
+        priceFilter.$lte = Number(queryObj.maxPrice);
+      }
+      queryObj.price = priceFilter;
+      delete queryObj.minPrice;
+      delete queryObj.maxPrice;
+    }
 
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
 
@@ -37,7 +63,8 @@ class QueryBuilder<T> {
   }
 
   sort() {
-    const sort = (this?.query?.sort as string)?.split(',')?.join(' ') || '-createdAt';
+    const sort =
+      (this?.query?.sort as string)?.split(',')?.join(' ') || '-createdAt';
     this.modelQuery = this.modelQuery.sort(sort as string);
     return this;
   }

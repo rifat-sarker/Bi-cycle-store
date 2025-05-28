@@ -7,7 +7,7 @@ const createBlog = catchAsync(async (req, res) => {
   const file = req.file;
   const user = req.user;
 
-  console.log('rifat', user);
+  // console.log('rifat', user);
 
   if (!file) {
     throw new Error('Image file is required');

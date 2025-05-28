@@ -8,7 +8,7 @@ import { multerUpload } from '../../config/multer.config';
 const router = express.Router();
 router.post(
   '/',
-  auth("admin"),
+  auth('admin'),
   multerUpload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);
