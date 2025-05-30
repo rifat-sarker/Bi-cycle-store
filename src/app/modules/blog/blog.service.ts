@@ -1,16 +1,19 @@
 import { IBlog } from './blog.interface';
 import { Blog } from './blog.model';
 
+// create blog
 const createBlogIntoDB = async (payload: Partial<IBlog>) => {
   const result = await Blog.create(payload);
   return result;
 };
 
+// get all blog
 const getAllBlogsFromDB = async () => {
   const result = await Blog.find();
   return result;
 };
 
+// get blog by id
 const getBlogByIdFromDB = async (_id: string) => {
   const result = await Blog.findById(_id);
   return result;
