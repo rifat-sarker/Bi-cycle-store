@@ -24,6 +24,12 @@ const categorySchema = new Schema<ICategoryDocument>(
       required: [true, 'Category icon is required'],
       trim: true,
     },
+    products: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Bicyle',
+      },
+    ],
   },
   {
     timestamps: true,

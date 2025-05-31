@@ -15,7 +15,7 @@ const getAllCategory = async () => {
 };
 
 const getProductsByCategory = async ({ slug }: { slug: string }) => {
-  const category = await Category.findOne({ slug });
+  const category = await Category.findOne({ slug }).populate('products');
 
   if (!category) {
     throw new Error('Category not found');
