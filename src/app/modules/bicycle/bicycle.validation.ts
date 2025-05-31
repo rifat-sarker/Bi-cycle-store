@@ -4,41 +4,13 @@ const createBicycleValidationSchema = z.object({
   body: z.object({
     name: z.string().nonempty('Name is required'),
     // productImg: z.string().nonempty('ProductImg is required').optional(),
-    brand: z.enum(
-      [
-        'CityRide',
-        'UrbanMotion',
-        'TrailPro',
-        'KidBike',
-        'GreenWheel',
-        'Velocita',
-        'HealthBike',
-        'SpeedBikes',
-        'ElectraBike',
-      ],
-      {
-        errorMap: () => ({
-          message: 'Invalid brand name. Please select a valid brand.',
-        }),
-      },
-    ),
+    brand: z.string(),
     price: z.number().min(0, 'Price must be a positive number'),
     model: z.enum(['Mountain', 'Road', 'Hybrid', 'BMX', 'Electric'], {
       errorMap: () => ({ message: 'Model is not supported' }),
     }),
-    category: z.enum(
-      [
-        'Outdoor',
-        'Sport',
-        'Urban',
-        'Adventure',
-        'Electric',
-        'Kids',
-        'Racing',
-        'Fitness',
-      ],
-      { errorMap: () => ({ message: 'Category is not supported' }) },
-    ),
+    category: z.string().nonempty('Category ID is required'),
+
     description: z.string().nonempty('Description is required'),
     quantity: z.number().min(0, 'Quantity must be a non-negative number'),
     stock: z.boolean().refine((value) => value === true || value === false, {
@@ -58,21 +30,7 @@ const updateBicycleValidationSchema = z.object({
         errorMap: () => ({ message: 'Model is not supported' }),
       })
       .optional(),
-    category: z
-      .enum(
-        [
-          'Outdoor',
-          'Sport',
-          'Urban',
-          'Adventure',
-          'Electric',
-          'Kids',
-          'Racing',
-          'Fitness',
-        ],
-        { errorMap: () => ({ message: 'Category is not supported' }) },
-      )
-      .optional(),
+    category: z.string().optional(),
     description: z.string().nonempty('Description is required').optional(),
     quantity: z
       .number()

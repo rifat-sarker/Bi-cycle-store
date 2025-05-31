@@ -36,20 +36,9 @@ const bicycleSchema = new Schema<TBicycle>(
       },
     },
     category: {
-      type: String,
-      enum: {
-        values: [
-          'Outdoor',
-          'Sport',
-          'Urban',
-          'Adventure',
-          'Electric',
-          'Kids',
-          'Racing',
-          'Fitness',
-        ],
-        message: '{VALUE} is not supported',
-      },
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true,
     },
     description: {
       type: String,
@@ -72,7 +61,6 @@ const bicycleSchema = new Schema<TBicycle>(
   },
   { timestamps: true, versionKey: false },
 );
-
 
 // create Bicycle model
 export const Bicycle = model<TBicycle>('Bicycle', bicycleSchema);

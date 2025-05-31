@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export type TBicycle = {
   name?: string;
   productImg?: string;
@@ -14,15 +16,7 @@ export type TBicycle = {
 
   price?: number;
   model?: 'Mountain' | 'Road' | 'Hybrid' | 'BMX' | 'Electric';
-  category:
-    | 'Outdoor'
-    | 'Sport'
-    | 'Urban'
-    | 'Adventure'
-    | 'Electric'
-    | 'Kids'
-    | 'Racing'
-    | 'Fitness';
+  category: Types.ObjectId;
   description?: string;
   quantity?: number;
   stock?: boolean;

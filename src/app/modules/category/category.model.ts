@@ -27,7 +27,7 @@ const categorySchema = new Schema<ICategoryDocument>(
     products: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Bicyle',
+        ref: 'Bicycle',
       },
     ],
   },

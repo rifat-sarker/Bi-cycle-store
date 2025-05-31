@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import QueryBuilder from '../../builder/QueryBuilder';
+import { Category } from '../category/category.model';
 // import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { bicycleSearchableFields } from './bicycle.constant';
 import { TBicycle } from './bicycle.interface';
@@ -21,6 +22,11 @@ const createBicycleIntoDB = async (bicycleData: TBicycle) => {
     // }
 
     const result = await Bicycle.create(bicycleData);
+    //  Push the created bicycle _id to the category
+    await Category.findByIdAndUpdate(result.category, {
+      $push: { products: result._id },
+    });
+
     return result;
   } catch (error) {
     console.error('Error in createBicycleIntoDB:', error);
