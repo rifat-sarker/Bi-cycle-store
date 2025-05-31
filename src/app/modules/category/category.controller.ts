@@ -29,6 +29,19 @@ const getAllCategory = catchAsync(async (req, res) => {
   });
 });
 
+const getProductsByCategory = catchAsync(async (req, res) => {
+  const { slug } = req.params;
+
+  const result = await CategoryService.getProductsByCategory({ slug });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Products by category retrieved successfully',
+    data: result,
+  });
+});
+
 const updateCategory = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await CategoryService.updateCategoryIntoDB(id, req.body);
@@ -56,6 +69,7 @@ const deleteCategory = catchAsync(async (req, res) => {
 export const CategoryController = {
   createCategories,
   getAllCategory,
+  getProductsByCategory,
   updateCategory,
   deleteCategory,
 };

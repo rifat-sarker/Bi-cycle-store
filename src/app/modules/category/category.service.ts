@@ -1,8 +1,8 @@
-import QueryBuilder from '../../builder/QueryBuilder';
 import { ICategory } from './category.interface';
 import { Category } from './category.model';
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
+import { Bicycle } from '../bicycle/bicycle.model';
 
 const createCategories = async (categories: ICategory[]) => {
   const result = await Category.insertMany(categories);
@@ -12,6 +12,17 @@ const createCategories = async (categories: ICategory[]) => {
 const getAllCategory = async () => {
   const result = await Category.find();
   return result;
+};
+
+const getProductsByCategory = async ({ slug }: { slug: string }) => {
+  const category = await Category.findOne({ slug });
+
+  if (!category) {
+    throw new Error('Category not found');
+  }
+
+  const products = await Bicycle.find({ category: category._id });
+  return products;
 };
 
 const updateCategoryIntoDB = async (
@@ -41,6 +52,7 @@ const deleteCategoryIntoDB = async (id: string) => {
 export const CategoryService = {
   createCategories,
   getAllCategory,
+  getProductsByCategory,
   updateCategoryIntoDB,
   deleteCategoryIntoDB,
 };

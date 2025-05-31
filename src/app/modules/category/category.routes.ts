@@ -8,6 +8,8 @@ const router = Router();
 
 router.get('/', CategoryController.getAllCategory);
 
+router.get('/:slug/products', CategoryController.getProductsByCategory);
+
 router.post(
   '/bulk-create',
   validateRequest(categoryValidation.bulkCreateCategoryValidationSchema),
