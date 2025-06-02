@@ -2,14 +2,13 @@ import { BicycleServices } from './bicycle.service';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
-import { updateBicycleStock } from './bicycle.utility';
 
 // create a bicycle
 const createBicycle = catchAsync(async (req, res) => {
   // console.log(req.body);
   // console.log(req.file);
 
-  const bicycleData = req.body // Manually parse the JSON data
+  const bicycleData = req.body; // Manually parse the JSON data
   const file = req.file;
 
   if (!file) {
@@ -28,7 +27,6 @@ const createBicycle = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
 
 //get all bicycle
 const getAllBicycle = catchAsync(async (req, res) => {
@@ -66,7 +64,7 @@ const getASpecificBicycle = catchAsync(async (req, res) => {
 const updateBicycle = catchAsync(async (req, res) => {
   const { productId } = req.params;
   const result = await BicycleServices.updateBicycleIntoDB(productId, req.body);
-  await updateBicycleStock(productId);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
