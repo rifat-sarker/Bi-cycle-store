@@ -80,13 +80,6 @@ const createOrderIntoDB = async (
         {
           $set: {
             quantity: { $subtract: ['$quantity', quantity] },
-            stock: {
-              $cond: [
-                { $gt: [{ $subtract: ['$quantity', quantity] }, 0] },
-                true,
-                false,
-              ],
-            },
           },
         },
       ],
@@ -243,8 +236,6 @@ const calculateRevenueFromDB = async (): Promise<number> => {
     throw new Error('Error calculating revenue from database');
   }
 };
-
-
 
 export const OrderServices = {
   createOrderIntoDB,
