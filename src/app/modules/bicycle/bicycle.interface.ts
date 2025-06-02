@@ -19,5 +19,4 @@ export type TBicycle = {
   category: Types.ObjectId;
   description?: string;
   quantity?: number;
-  stock?: boolean;
 };

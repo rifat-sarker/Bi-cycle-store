@@ -53,11 +53,6 @@ const bicycleSchema = new Schema<TBicycle>(
       required: true,
       default: 0,
     },
-    stock: {
-      type: Boolean,
-      required: true,
-      default: true,
-    },
   },
   { timestamps: true, versionKey: false },
 );

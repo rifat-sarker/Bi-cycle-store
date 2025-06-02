@@ -13,9 +13,7 @@ const createBicycleValidationSchema = z.object({
 
     description: z.string().nonempty('Description is required'),
     quantity: z.number().min(0, 'Quantity must be a non-negative number'),
-    stock: z.boolean().refine((value) => value === true || value === false, {
-      message: 'InStock must be true or false',
-    }),
+    
   }),
 });
 
@@ -36,12 +34,7 @@ const updateBicycleValidationSchema = z.object({
       .number()
       .min(0, 'Quantity must be a non-negative number')
       .optional(),
-    stock: z
-      .boolean()
-      .refine((value) => value === true || value === false, {
-        message: 'InStock must be true or false',
-      })
-      .optional(),
+    
   }),
 });
 
