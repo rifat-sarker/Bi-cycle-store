@@ -15,7 +15,8 @@ export const getCart = catchAsync(async (req, res) => {
 });
 
 export const addOrUpdateCart = catchAsync(async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user.id;
+  console.log(userId);
   const { productId } = req.body;
   const result = await CartService.addOrUpdateCartItemInDB(userId, productId);
 

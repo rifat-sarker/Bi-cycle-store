@@ -11,16 +11,10 @@ const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
 
-
     // checking if the token is missing
     if (!token) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
     }
-
-    // // Ensure JWT secret is defined
-    // if (!config.jwt_access_secret) {
-    //   throw new Error('JWT secret is not defined in config!');
-    // }
 
 
     // checking if the given token is valid
@@ -34,12 +28,13 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED, 'Unauthorized');
     }
 
-    const { email, role, iat,  } = decoded;
+    const { _id, email, role, iat } = decoded;
 
-    // if (!email || !role) {
-    //   throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token payload');
-    // }
+    console.log(_id);
 
+    if (!_id) {
+      throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token!');
+    }
 
     // checking if the user is exist
     const user = await User.isUserExistsByEmail(email);
@@ -78,7 +73,8 @@ const auth = (...requiredRoles: TUserRole[]) => {
       );
     }
 
-    req.user = decoded as JwtPayload ;
+    req.user = decoded as JwtPayload;
+
     console.log(req.user);
     next();
   });

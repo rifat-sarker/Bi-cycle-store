@@ -9,7 +9,7 @@ const cartItemSchema = new mongoose.Schema(
     },
     productId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
+      ref: 'Bicycle',
       required: true,
     },
     quantity: { type: Number, default: 1 },
