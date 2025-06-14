@@ -5,6 +5,7 @@ import { UserRoutes } from '../modules/user/user.route';
 import { AuthRoutes } from '../modules/auth/auth.route';
 import { CategoryRoutes } from '../modules/category/category.routes';
 import { BlogRoutes } from '../modules/blog/blog.route';
+import { CartRoutes } from '../modules/cart/cart.route';
 
 const router = Router();
 
@@ -16,6 +17,10 @@ const moduleRoutes = [
   {
     path: '/orders',
     route: OrderRoutes,
+  },
+  {
+    path: '/cart',
+    route: CartRoutes,
   },
   {
     path: '/users',

@@ -17,7 +17,7 @@ const createUserIntoDB = async (userData: TUser) => {
     );
   }
 
-  // 🔹 Create new user in the database
+  // Create new user in the database
   const newUser = await User.create(userData);
 
   // 🔹 Generate token for the newly created user
