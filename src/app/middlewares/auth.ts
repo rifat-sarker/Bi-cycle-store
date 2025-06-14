@@ -16,7 +16,6 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
     }
 
-
     // checking if the given token is valid
     let decoded;
     try {
@@ -28,11 +27,11 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED, 'Unauthorized');
     }
 
-    const { _id, email, role, iat } = decoded;
+    const { id, email, role, iat } = decoded;
 
-    console.log(_id);
+    console.log(id);
 
-    if (!_id) {
+    if (!id) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token!');
     }
 

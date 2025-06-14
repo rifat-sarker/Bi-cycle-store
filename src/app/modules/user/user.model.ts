@@ -7,11 +7,11 @@ import { UserStatus } from './user.constant';
 
 const userSchema = new Schema<TUser, UserModel>(
   {
-    // id: {
-    //   type: String,
-    //   required: true,
-    //   unique: true,
-    // },
+    _id: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     name: {
       type: String,
       required: true,

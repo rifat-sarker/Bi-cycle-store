@@ -3,7 +3,7 @@ import sendResponse from '../../utils/sendResponse';
 import { CartService } from './cart.service';
 
 export const getCart = catchAsync(async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user.id;
   const result = await CartService.getUserCartItemsFromDB(userId);
 
   sendResponse(res, {
@@ -16,7 +16,7 @@ export const getCart = catchAsync(async (req, res) => {
 
 export const addOrUpdateCart = catchAsync(async (req, res) => {
   const userId = req.user.id;
-  console.log(userId);
+  // console.log(userId);
   const { productId } = req.body;
   const result = await CartService.addOrUpdateCartItemInDB(userId, productId);
 

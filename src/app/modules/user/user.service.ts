@@ -6,38 +6,38 @@ import { createToken } from '../auth/auth.utils';
 import { TUser } from './user.interface';
 import { User } from './user.model';
 
-const createUserIntoDB = async (userData: TUser) => {
-  // 🔹 Check if user already exists
-  const existingUser = await User.isUserExistsByEmail(userData.email);
+  const createUserIntoDB = async (userData: TUser) => {
+    // 🔹 Check if user already exists
+    const existingUser = await User.isUserExistsByEmail(userData.email);
 
-  if (existingUser) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      'This email is already registered!',
+    if (existingUser) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'This email is already registered!',
+      );
+    }
+
+    // Create new user in the database
+    const newUser = await User.create(userData);
+
+    // 🔹 Generate token for the newly created user
+    const jwtPayload = {
+      id: newUser._id,
+      email: newUser.email,
+      role: newUser.role,
+    };
+
+    const accessToken = createToken(
+      jwtPayload,
+      config.jwt_access_secret as string,
+      6000,
     );
-  }
 
-  // Create new user in the database
-  const newUser = await User.create(userData);
-
-  // 🔹 Generate token for the newly created user
-  const jwtPayload = {
-    id: newUser._id,
-    email: newUser.email,
-    role: newUser.role,
+    return {
+      ...newUser.toObject(),
+      accessToken,
+    };
   };
-
-  const accessToken = createToken(
-    jwtPayload,
-    config.jwt_access_secret as string,
-    6000,
-  );
-
-  return {
-    ...newUser.toObject(),
-    accessToken,
-  };
-};
 
 const createAdminIntoDB = async (userData: TAdmin) => {
   const result = await User.create(userData);
