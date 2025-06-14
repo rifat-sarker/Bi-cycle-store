@@ -46,7 +46,7 @@ export const updateQuantity = catchAsync(async (req, res) => {
 
 export const toggleSaveCartItem = catchAsync(async (req, res) => {
   const { cartItemId } = req.params;
-  const userId = req.user._id;
+  const userId = req.user.id;
   const item = await CartService.toggleSaveCartItemInDB(cartItemId, userId);
   if (!item) {
     return sendResponse(res, {
@@ -67,7 +67,7 @@ export const toggleSaveCartItem = catchAsync(async (req, res) => {
 
 export const deleteCartItem = catchAsync(async (req, res) => {
   const { cartItemId } = req.params;
-  const userId = req.user._id;
+  const userId = req.user.id;
   await CartService.deleteCartItemFromDB(cartItemId, userId);
   sendResponse(res, {
     statusCode: 200,
