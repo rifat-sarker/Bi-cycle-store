@@ -72,7 +72,12 @@ const auth = (...requiredRoles: TUserRole[]) => {
       );
     }
 
-    req.user = decoded as JwtPayload;
+    req.user = {
+      ...(decoded as JwtPayload),
+      email,
+      role,
+      _id: id,
+    };
 
     console.log(req.user);
     next();
