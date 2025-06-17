@@ -12,7 +12,7 @@ const router = express.Router();
 // create bicycle
 router.post(
   '/',
-  auth(USER_ROLE.admin),
+  // auth(USER_ROLE.admin), 
   multerUpload.single('file'),
   // upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {

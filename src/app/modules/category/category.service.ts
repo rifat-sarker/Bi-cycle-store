@@ -10,7 +10,7 @@ const createCategories = async (categories: ICategory[]) => {
 };
 
 const getAllCategory = async () => {
-  const result = await Category.find();
+  const result = await Category.find().populate('products');
   return result;
 };
 
