@@ -29,7 +29,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
 
     const { id, email, role, iat } = decoded;
 
-    console.log(id);
+    // console.log(id);
 
     if (!id) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token!');
@@ -79,7 +79,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
       _id: id,
     };
 
-    console.log(req.user);
+    // console.log(req.user);
     next();
   });
 };
