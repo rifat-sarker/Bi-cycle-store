@@ -1,5 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { TBicycle } from './bicycle.interface';
+import slugify from 'slugify';
 
 const bicycleSchema = new Schema<TBicycle>(
   {
@@ -8,6 +9,7 @@ const bicycleSchema = new Schema<TBicycle>(
       required: true,
       trim: true,
     },
+    slug: { type: String, required: true, unique: true, trim: true },
     productImg: {
       type: String,
     },
@@ -56,6 +58,13 @@ const bicycleSchema = new Schema<TBicycle>(
   },
   { timestamps: true, versionKey: false },
 );
+
+bicycleSchema.pre('validate', function (next) {
+  if (this.name && !this.slug) {
+    this.slug = slugify(this.name, { lower: true, strict: true });
+  }
+  next();
+});
 
 // create Bicycle model
 export const Bicycle = model<TBicycle>('Bicycle', bicycleSchema);

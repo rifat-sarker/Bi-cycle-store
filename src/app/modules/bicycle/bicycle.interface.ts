@@ -2,6 +2,7 @@ import { Types } from 'mongoose';
 
 export type TBicycle = {
   name?: string;
+  slug?: string;
   productImg?: string;
   brand?:
     | 'CityRide'
