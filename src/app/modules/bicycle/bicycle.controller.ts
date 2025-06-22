@@ -51,11 +51,17 @@ const getAllBicycle = catchAsync(async (req, res) => {
 
 // get a single bicycle
 const getASpecificBicycle = catchAsync(async (req, res) => {
-  const { productId } = req.params;
+  const { slugAndId } = req.params;
+
+  // Extract the last 24 characters for MongoDB ObjectId
+  const productId = slugAndId.slice(-24);
+
   const result = await BicycleServices.getASpecificBicycleFromDB(productId);
-  res.status(200).json({
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
     message: 'Get a specific bicycle successfully',
-    status: true,
     data: result,
   });
 });

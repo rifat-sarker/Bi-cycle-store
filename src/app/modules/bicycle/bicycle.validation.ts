@@ -4,6 +4,7 @@ const createBicycleValidationSchema = z.object({
   body: z.object({
     name: z.string().nonempty('Name is required'),
     // productImg: z.string().nonempty('ProductImg is required').optional(),
+    slug: z.string().nonempty('Slug is required'),
     brand: z.string(),
     price: z.number().min(0, 'Price must be a positive number'),
     model: z.enum(['Mountain', 'Road', 'Hybrid', 'BMX', 'Electric'], {
@@ -13,7 +14,6 @@ const createBicycleValidationSchema = z.object({
 
     description: z.string().nonempty('Description is required'),
     quantity: z.number().min(0, 'Quantity must be a non-negative number'),
-    
   }),
 });
 
@@ -21,6 +21,7 @@ const updateBicycleValidationSchema = z.object({
   body: z.object({
     name: z.string().nonempty('Name is required').optional(),
     // productImg: z.string().nonempty('ProductImg is required').optional(),
+    slug: z.string().nonempty('Slug is required').optional(),
     brand: z.string().nonempty('Brand is required').optional(),
     price: z.number().min(0, 'Price must be a positive number').optional(),
     model: z
@@ -34,7 +35,6 @@ const updateBicycleValidationSchema = z.object({
       .number()
       .min(0, 'Quantity must be a non-negative number')
       .optional(),
-    
   }),
 });
 
