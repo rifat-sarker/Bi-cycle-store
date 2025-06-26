@@ -35,7 +35,7 @@ const createBicycleIntoDB = async (bicycleData: TBicycle) => {
 };
 
 const getAllBicycleFromDB = async (query: Record<string, unknown>) => {
-  const bicycleQuery = new QueryBuilder(Bicycle.find(), query)
+  const bicycleQuery = new QueryBuilder(Bicycle.find().populate('category'), query)
     .search(bicycleSearchableFields)
     .filter()
     .sort()
