@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: [
-      'https://bicycle-store-client.vercel.app',
+      // 'https://bicycle-store-client.vercel.app',
       'http://localhost:5173',
     ],
     credentials: true,

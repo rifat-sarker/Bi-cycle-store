@@ -48,7 +48,7 @@ const getAllBicycleFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getASpecificBicycleFromDB = async (_id: string) => {
-  const result = await Bicycle.findById(_id);
+  const result = await Bicycle.findById(_id).populate("category");
   return result;
 };
 
